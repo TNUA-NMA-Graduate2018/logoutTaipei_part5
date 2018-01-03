@@ -2,8 +2,8 @@
 #include <Adafruit_NeoPixel.h>
 //#include <ESP8266WiFi.h>
 int pixelNumber = 120;
-Adafruit_NeoPixel stripA = Adafruit_NeoPixel(pixelNumber, D6, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripB = Adafruit_NeoPixel(pixelNumber, D7, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripA = Adafruit_NeoPixel(pixelNumber, 6, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripB = Adafruit_NeoPixel(pixelNumber, 7, NEO_GRB + NEO_KHZ800);
 
 int value = 1;
 int valueold = 0;
@@ -26,8 +26,8 @@ void setup() {
 }
 void loop() {
 
-  value=Seiral.read();
-  if (request.indexOf("/LED=one") != -1) {
+  value= Serial.read();
+ /* if (request.indexOf("/LED=one") != -1) {
     //LedChangeOhyeah (1);
     value = 1;
   }
@@ -39,7 +39,7 @@ void loop() {
     //LedChangeOhyeah (3);
     value = 3;
   }
-
+*/
   switch (value) {
 
     case 1: LedChangeOhyeah (1); break;
