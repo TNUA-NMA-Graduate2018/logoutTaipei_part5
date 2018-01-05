@@ -241,7 +241,7 @@
 					"outlettype" : [ "list", "float", "float", "float", "float", "list", "int" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 554.0, 555.0, 369.0, 112.399963 ],
-					"setfilter" : [ 0, 1, 1, 0, 0, 417.122284, 1.412203, 0.169264, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+					"setfilter" : [ 0, 1, 1, 0, 0, 417.122284, 1.997932, 0.289438, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 					"style" : "",
 					"varname" : "filtergraph~"
 				}
@@ -514,7 +514,7 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 594.5, 672.0, 69.0, 20.0 ],
 					"style" : "",
-					"text" : "-0.56 π",
+					"text" : "-0.53 π",
 					"textcolor" : [ 0.8, 0.8, 0.8, 1.0 ]
 				}
 
@@ -561,7 +561,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 1083.399902, 361.5, 61.0, 35.0 ],
 					"style" : "",
-					"text" : "-1.745329"
+					"text" : "-1.658063"
 				}
 
 			}
@@ -8339,7 +8339,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 488.0, 200.0, 59.0, 31.0 ],
 									"style" : "",
-									"text" : "1 1 1 1 0 0 0 0 0 0 0 0"
+									"text" : "1 1 0 0 0 0 0 0 0 0 0 0"
 								}
 
 							}
@@ -10599,7 +10599,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "float" ],
 					"patching_rect" : [ 351.0, 471.0, 48.0, 20.0 ],
-					"sig" : 0.134703,
+					"sig" : 0.0,
 					"style" : ""
 				}
 
@@ -10633,7 +10633,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "float" ],
 					"patching_rect" : [ 239.0, 471.0, 48.0, 20.0 ],
-					"sig" : 0.469946,
+					"sig" : 0.460994,
 					"style" : ""
 				}
 
@@ -10650,7 +10650,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "float" ],
 					"patching_rect" : [ 183.0, 471.0, 48.0, 20.0 ],
-					"sig" : 0.779933,
+					"sig" : 0.775335,
 					"style" : ""
 				}
 
