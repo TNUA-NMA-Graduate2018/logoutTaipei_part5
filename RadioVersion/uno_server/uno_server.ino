@@ -57,6 +57,22 @@ void loop() {
   ToOtherRight = slider(readSlider1);
   ToOtherLeft = slider(readSlider2);
   SendClient(ToOtherLeft, ToOtherRight);
+  if(analogRead(A2)<85){
+    value=1;
+  }
+  else if (anlogRead(A2)<170){
+    value=2;
+  }
+  else
+  {
+    value=3;
+  }
+  if(analogRead(A3)<128){
+    Mode=0;
+  }
+  else{
+    Mode=1;
+  }
    switch (value) {
     case 1: LedChangeOhyeah (1); break;
     case 2: LedChangeOhyeah (2); break;
@@ -204,3 +220,4 @@ void motor() {
   delay(50);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
 
 }
+
