@@ -38,6 +38,20 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-1",
+					"linecount" : 2,
+					"maxclass" : "newobj",
+					"numinlets" : 6,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 1133.0, 218.0, 100.0, 35.0 ],
+					"style" : "",
+					"text" : "scale 0 255 0 360"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"format" : 6,
 					"id" : "obj-64",
 					"maxclass" : "flonum",
@@ -283,19 +297,6 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-113",
-					"maxclass" : "number",
-					"numinlets" : 1,
-					"numoutlets" : 2,
-					"outlettype" : [ "", "bang" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 1088.899902, 225.57692, 50.0, 22.0 ],
-					"style" : ""
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-284",
 					"maxclass" : "number",
 					"numinlets" : 1,
@@ -385,7 +386,7 @@
 					"outlettype" : [ "int", "" ],
 					"patching_rect" : [ 965.833374, 259.0, 100.0, 22.0 ],
 					"style" : "",
-					"text" : "serial c 9600"
+					"text" : "serial b 115200"
 				}
 
 			}
@@ -513,7 +514,7 @@
 					"presentation" : 1,
 					"presentation_rect" : [ 594.5, 672.0, 69.0, 20.0 ],
 					"style" : "",
-					"text" : "0.48 π",
+					"text" : "1.93 π",
 					"textcolor" : [ 0.8, 0.8, 0.8, 1.0 ]
 				}
 
@@ -559,7 +560,7 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 1083.399902, 361.5, 61.0, 22.0 ],
 					"style" : "",
-					"text" : "1.500983"
+					"text" : "6.073746"
 				}
 
 			}
@@ -8337,7 +8338,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 488.0, 200.0, 59.0, 31.0 ],
 									"style" : "",
-									"text" : "1 1 0 0 0 0 0 0 0 0 0 0"
+									"text" : "1 1 1 1 0 0 0 0 0 0 0 0"
 								}
 
 							}
@@ -10631,7 +10632,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "float" ],
 					"patching_rect" : [ 239.0, 471.0, 48.0, 20.0 ],
-					"sig" : 0.319072,
+					"sig" : 0.021454,
 					"style" : ""
 				}
 
@@ -10648,7 +10649,7 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "float" ],
 					"patching_rect" : [ 183.0, 471.0, 48.0, 20.0 ],
-					"sig" : 0.678065,
+					"sig" : 0.0,
 					"style" : ""
 				}
 
@@ -19066,6 +19067,15 @@
  ],
 		"lines" : [ 			{
 				"patchline" : 				{
+					"destination" : [ "obj-282", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-38", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -19082,16 +19092,6 @@
 					"hidden" : 0,
 					"midpoints" : [ 328.5, 426.0, 426.0, 426.0, 426.0, 303.0, 406.5, 303.0 ],
 					"source" : [ "obj-10", 2 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-282", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"midpoints" : [ 1098.399902, 249.0, 1092.899902, 249.0 ],
-					"source" : [ "obj-113", 0 ]
 				}
 
 			}
@@ -19579,10 +19579,9 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-282", 0 ],
+					"destination" : [ "obj-1", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
-					"midpoints" : [ 975.333374, 291.0, 1080.0, 291.0, 1080.0, 252.0, 1092.899902, 252.0 ],
 					"source" : [ "obj-220", 0 ]
 				}
 
@@ -20164,16 +20163,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-113", 0 ],
-					"disabled" : 0,
-					"hidden" : 0,
-					"midpoints" : [ 985.0, 249.0, 1083.0, 249.0, 1083.0, 219.0, 1098.399902, 219.0 ],
-					"source" : [ "obj-6", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-220", 0 ],
 					"disabled" : 0,
 					"hidden" : 0,
@@ -20384,12 +20373,12 @@
 			"obj-303" : [ "Rotate", "Rotate", 0 ],
 			"obj-74" : [ "OutputRate", "Rate", 0 ],
 			"obj-13" : [ "Edit", "Edit", 0 ],
-			"obj-27" : [ "Distance", "Distance", 1 ],
 			"obj-115" : [ "Lecture", "Lecture", 0 ],
-			"obj-298" : [ "ShiftY", "ShiftY", 0 ],
+			"obj-27" : [ "Distance", "Distance", 1 ],
 			"obj-26" : [ "Azimuth", "Azimuth", 1 ],
-			"obj-32" : [ "InitPos", "InitPos", 0 ],
+			"obj-298" : [ "ShiftY", "ShiftY", 0 ],
 			"obj-16" : [ "EnableSends", "EnableSends", 0 ],
+			"obj-32" : [ "InitPos", "InitPos", 0 ],
 			"obj-322" : [ "ShakeSize", "ShakeSize", 0 ],
 			"obj-39" : [ "ShiftX", "ShiftX", 0 ],
 			"obj-125" : [ "OutputCurve", "Curve", 0 ],
