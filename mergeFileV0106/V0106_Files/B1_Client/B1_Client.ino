@@ -49,7 +49,7 @@ void setup() {
   pinMode(resL, INPUT);
   pinMode(modeChanging, INPUT);
   rf24.begin();
-  rf24.setChannel(83);  // 設定頻道編號
+  rf24.setChannel(86);  // 設定頻道編號
   rf24.setPALevel(RF24_PA_MIN);
   rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
