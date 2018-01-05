@@ -81,7 +81,6 @@ void setup() {
 void loop() {
   //modeChange = digitalRead(modeChanging);
   if (!modeChange) {
-    ConnectCheck();
     sliderControlSelf(resR, resL);
   }
   else {
@@ -95,46 +94,23 @@ void ConnectCheck() {
     char mg[16] = "";
     rf24.read(&mg, sizeof(mg));
 
-    if (modeChange) {
-      FromOtherL = 0;
-      FromOtherR = 0;
-      int now = 0;
-      int s = 0;
-      if (mg[s] == 'B' || mg[s] == 'A') {
-        if (mg[s] == 'B') {
-          modeChange = 1;
-        }
-        else if (mg[s] == 'A') {
-          modeChange = 0;
-        }
+    FromOtherL = 0;
+    FromOtherR = 0;
+    int now = 0;
+    int s = 0;
+    do {
+      if (mg[s] == ' ')now = 1;
+      else if (now == 0 && mg[s] >= '0' &&  mg[s] <= '9') {
+        FromOtherL *= 10;
+        FromOtherL += mg[s] - '0';
+      } else if (now == 1 && mg[s] >= '0' &&  mg[s] <= '9') {
+        FromOtherR *= 10;
+        FromOtherR += mg[s] - '0';
       }
-      else {
-        do {
-          if (mg[s] == ' ')now = 1;
-          else if (now == 0 && mg[s] >= '0' &&  mg[s] <= '9') {
-            FromOtherL *= 10;
-            FromOtherL += mg[s] - '0';
-          } else if (now == 1 && mg[s] >= '0' &&  mg[s] <= '9') {
-            FromOtherR *= 10;
-            FromOtherR += mg[s] - '0';
-          }
-          s++;
-        } while (mg[s] != ';');
-      }
-    }
-    else {
-      if (mg[s] == 'B' || mg[s] == 'A') {
-        if (mg[s] == 'B') {
-          modeChange = 1;
-        }
-        else if (mg[s] == 'A') {
-          modeChange = 0;
-        }
-      }
-    }
+      s++;
+    } while (mg[s] != ';');
   }
 }
-
 
 
 void sliderControlByOther(int FromOtherR, int FromOtherL) {

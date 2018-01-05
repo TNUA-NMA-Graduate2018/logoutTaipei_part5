@@ -16,6 +16,8 @@ float easing = 0.01;
 float easDegree = 110;
 int angle = 0 ;
 
+
+
 RF24 rf24(7, 8); // CE腳, CSN腳
 
 const byte addr[] = "1Node";
@@ -57,13 +59,17 @@ void loop() {
   ToOtherRight = slider(readSlider1);
   ToOtherLeft = slider(readSlider2);
   SendClient(ToOtherLeft, ToOtherRight);
+
    switch (value) {
+
     case 1: LedChangeOhyeah (1); break;
     case 2: LedChangeOhyeah (2); break;
     case 3: LedChangeOhyeah (3); break;
+
   }
   motor();
 }
+
 
 void SendClient(int sendToOtherL, int sendToOtherR) {
   char msgTempA[16] = "0";
@@ -98,6 +104,8 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   rf24.write(&msg, sizeof(msg));  // 傳送資料
   delay(500);
 }
+
+
 int slider(int slider) {
   int sli = analogRead(slider);
   int value = int(map(sli, 0, 1024, 0, 255));
@@ -105,6 +113,9 @@ int slider(int slider) {
   delay(100);
   return value ;
 }
+
+
+
 void   LedChangeOhyeah (int num) {
   if (num == 1) {
     theaterChase(50, 5);//50是亮度 5是等多久(速度)
@@ -171,6 +182,7 @@ void breath(int c, uint8_t wait) {
 
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
+
   for (j = 0; j < 128; j++) { // 5 cycles of all colors on wheel
     for (i = 0; i < stripA.numPixels(); i++) {
       stripA.setPixelColor(i, Wheel(((i * 255 / stripA.numPixels()) + j ) & 127));
@@ -201,6 +213,6 @@ void motor() {
   angle += 5; //可以控制去程的時間(加的數字越大 轉的時間越短)
   nowDegree = 110 + (20 * sin(radians(angle)));//＊sin前的那個數字 控制轉速
   //nowDegree += (easDegree - nowDegree) * easing;
-  delay(50);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
+  delay(300);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
 
 }
