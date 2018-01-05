@@ -7,9 +7,11 @@
 int pixelNumber = 120;
 Adafruit_NeoPixel stripA = Adafruit_NeoPixel(pixelNumber, 5, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripB = Adafruit_NeoPixel(pixelNumber, 6, NEO_GRB + NEO_KHZ800);
-Servo myservo; 
+Servo myservo;
 int value = 1;//LED模式
-int Mode=1;//輪椅模式
+int Mode = 1; //輪椅模式
+int ModeChanged = 1; //輪椅模式確認
+
 const int servoPin = 9; // the digital pin used for the servo
 float nowDegree = 110;
 float easing = 0.01;
@@ -33,54 +35,66 @@ void setup() {
   rf24.setPALevel(RF24_PA_MIN);   // 設定廣播功率
   rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
   rf24.stopListening();       // 停止偵聽；設定成發射模式
-  
+
   pinMode(readSlider1, INPUT);
   pinMode(readSlider2, INPUT);
-  pinMode(A2,INPUT)//可變電阻調LED
-  pinMode(A3,INPUT);//調整輪椅模式
-  rf24.begin();
-  rf24.setChannel(83);       // 設定頻道編號
-  rf24.openWritingPipe(addr); // 設定通道位址
-  rf24.setPALevel(RF24_PA_MIN);   // 設定廣播功率
-  rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
-  rf24.stopListening();       // 停止偵聽；設定成發射模式
-
+  pinMode(A2, INPUT) //可變電阻調LED
+  pinMode(A3, INPUT); //調整輪椅模式
   stripA.begin();
   stripB.begin();
-  
+
   myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
   myservo.write(nowDegree);
   delay(1000);
 }
 
 void loop() {
-  ToOtherRight = slider(readSlider1);
-  ToOtherLeft = slider(readSlider2);
-  SendClient(ToOtherLeft, ToOtherRight);
-  if(analogRead(A2)<85){
-    value=1;
+  if (analogRead(A3) < 128) {//自控
+    ModeChanged = 0;
   }
-  else if (anlogRead(A2)<170){
-    value=2;
+  else {//互控
+    ModeChanged = 1;
   }
-  else
-  {
-    value=3;
+  if (Mode = 0 && ModeChanged == 1) {
+    SendControlChange(ModeChanged);
+    Mode = 1;
   }
-  if(analogRead(A3)<128){
-    Mode=0;
+  if (Mode = 1 && ModeChanged == 0) {
+    SendControlChange(ModeChanged);
+    Mode = 0;
   }
-  else{
-    Mode=1;
+  if (Mode == 1) {
+    ToOtherRight = slider(readSlider1);
+    ToOtherLeft = slider(readSlider2);
+    SendClient(ToOtherLeft, ToOtherRight);
   }
-   switch (value) {
+  if (analogRead(A2) < 85) {
+    value = 1;
+  }
+  else if (anlogRead(A2) < 170) {
+    value = 2;
+  }
+  else {
+    value = 3;
+  }
+  switch (value) {
     case 1: LedChangeOhyeah (1); break;
     case 2: LedChangeOhyeah (2); break;
     case 3: LedChangeOhyeah (3); break;
   }
   motor();
 }
-
+void SendControlChange(int control) {
+  char msg[16] = "0";
+  if (control == 0) {
+    msg[0] = '0';
+  }
+  else {
+    msg[0] = '1';
+  }
+  rf24.write(&msg, sizeof(msg));  // 傳送資料
+  delay(100);
+}
 void SendClient(int sendToOtherL, int sendToOtherR) {
   char msgTempA[16] = "0";
   char msgTempB[16] = "0";
@@ -109,19 +123,19 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   }
 
   msg[flag + flagB] = ';';
-  Serial.println(msg);
+  //Serial.println(msg);
   //Serial.println(output);
   rf24.write(&msg, sizeof(msg));  // 傳送資料
-  delay(500);
+  delay(100);
 }
 int slider(int slider) {
   int sli = analogRead(slider);
   int value = int(map(sli, 0, 1024, 0, 255));
-  Serial.println(value);
-  delay(100);
+  //Serial.println(value);
+  //delay(100);
   return value ;
 }
-void   LedChangeOhyeah (int num) {
+void  LedChangeOhyeah (int num) {
   if (num == 1) {
     theaterChase(50, 5);//50是亮度 5是等多久(速度)
   }
@@ -150,9 +164,8 @@ void theaterChase(int c, uint8_t wait) {
         for (int a = 0; a < 10; a++) {
           stripA.setPixelColor(i + q - a, stripA.Color(c - (5 * (a + 1)), c - (5 * (a + 1)), c - (5 * (a + 1))));
           stripA.setPixelColor(i + q - 9 - a, stripA.Color(0, 0, 0));
-          
           stripB.setPixelColor(i + q - a, stripB.Color(c - (5 * (a + 1)), c - (5 * (a + 1)), c - (5 * (a + 1))));
-          stripB.setPixelColor( i+ q - 9 - a, stripB.Color(0, 0, 0));
+          stripB.setPixelColor( i + q - 9 - a, stripB.Color(0, 0, 0));
           delay(wait);
         }//turn every third pixel on
         stripA.show();
@@ -164,17 +177,16 @@ void theaterChase(int c, uint8_t wait) {
 void breath(int c, uint8_t wait) {
   int i, j;
 
-  for (j = 0; j < c+1; j++) {
+  for (j = 0; j < c + 1; j++) {
     for (i = 0; i < stripA.numPixels(); i++) {
       stripA.setPixelColor(i, stripA.Color(c - j, c - j, c - j));
       stripB.setPixelColor(i, stripB.Color(c - j, c - j, c - j));
-
     }
     stripA.show();
     stripB.show();
     delay(wait);
   }
-  for (j = 0; j < c+1; j++) {
+  for (j = 0; j < c + 1; j++) {
     for (i = 0; i < stripA.numPixels(); i++) {
       stripA.setPixelColor(i, stripA.Color(j, j, j));
       stripB.setPixelColor(i, stripB.Color(j, j, j));
@@ -217,7 +229,6 @@ void motor() {
   angle += 5; //可以控制去程的時間(加的數字越大 轉的時間越短)
   nowDegree = 110 + (20 * sin(radians(angle)));//＊sin前的那個數字 控制轉速
   //nowDegree += (easDegree - nowDegree) * easing;
-  delay(50);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
-
+  delay(100);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
 }
 

@@ -9,7 +9,6 @@ const byte addr[] = "1Node";
 byte pipe = 1;  // 指定通道編號
 
 boolean modeChange = 1; //0 =selfs  1=other
-
 const int modeChanging = 3;
 //Radio Used 7,8,11,12,13
 const int RelayR1 = 1;//4
@@ -102,10 +101,10 @@ void ConnectCheck() {
       int s = 0;
       if (mg[s] == 'B' || mg[s] == 'A') {
         if (mg[s] == 'B') {
-          modeChange = 1;
+          modeChange = 1;//互控
         }
         else if (mg[s] == 'A') {
-          modeChange = 0;
+          modeChange = 0;//自控
         }
       }
       else {
@@ -134,9 +133,6 @@ void ConnectCheck() {
     }
   }
 }
-
-
-
 void sliderControlByOther(int FromOtherR, int FromOtherL) {
   Rgoahead(FromOtherR);
   Rgoback(FromOtherR);
