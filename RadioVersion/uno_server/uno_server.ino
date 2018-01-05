@@ -8,14 +8,15 @@ int pixelNumber = 120;
 Adafruit_NeoPixel stripA = Adafruit_NeoPixel(pixelNumber, 5, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripB = Adafruit_NeoPixel(pixelNumber, 6, NEO_GRB + NEO_KHZ800);
 Servo myservo; 
-
+int value = 1;//LED模式
+int Mode=1;//輪椅模式
 const int servoPin = 9; // the digital pin used for the servo
 float nowDegree = 110;
 float easing = 0.01;
 float easDegree = 110;
 int angle = 0 ;
 
-int value = 1;
+
 
 RF24 rf24(7, 8); // CE腳, CSN腳
 
@@ -38,7 +39,7 @@ void setup() {
   pinMode(readSlider1, INPUT);
   pinMode(readSlider2, INPUT);
   pinMode(A2,INPUT)//可變電阻調LED
-
+  pinMode(A3,INPUT);//調整輪椅模式
   rf24.begin();
   rf24.setChannel(83);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
