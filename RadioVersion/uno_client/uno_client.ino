@@ -56,7 +56,7 @@ void setup() {
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
-  
+
   while (!compass.begin())
   {
     delay(500);
@@ -75,7 +75,7 @@ void setup() {
   compass.setSamples(HMC5883L_SAMPLES_8);
 
   // Set calibration offset. See HMC5883L_calibration.ino
-  compass.setOffset(0, 0); 
+  compass.setOffset(0, 0);
 }
 
 void loop() {
@@ -87,7 +87,7 @@ void loop() {
     ConnectCheck();
     sliderControlByOther(FromOtherR, FromOtherL);
   }
-detectDegree();
+  detectDegree();
 }
 void ConnectCheck() {
   if (rf24.available(&pipe)) {
@@ -189,7 +189,7 @@ void Lnomove(int valuein) {
   }
 }
 
-void detectDegree(){
+void detectDegree() {
 
   long x = micros();
   Vector norm = compass.readNormalize();
@@ -206,23 +206,22 @@ void detectDegree(){
   {
     heading += 2 * PI;
   }
- 
+
   if (heading > 2 * PI)
   {
     heading -= 2 * PI;
   }
 
   // Convert to degrees
-  float headingDegrees = heading * 180/M_PI; 
+  float headingDegrees = heading * 180 / M_PI;
 
   // Fix HMC5883L issue with angles
   float fixedHeadingDegrees;
- 
+
   if (headingDegrees >= 1 && headingDegrees < 240)
   {
     fixedHeadingDegrees = map(headingDegrees, 0, 239, 0, 179);
-  } else
-  if (headingDegrees >= 240)
+  } else if (headingDegrees >= 240)
   {
     fixedHeadingDegrees = map(headingDegrees, 240, 360, 180, 360);
   }
@@ -234,12 +233,12 @@ void detectDegree(){
   {
     smoothHeadingDegrees = previousDegree;
   }
-  
+
   previousDegree = smoothHeadingDegrees;
 
-  char writeDegrees = char(map(smoothHeadingDegrees,0,360,0,255));
-  Serial.print(writeDegrees); 
-  //return smoothHeadingDegrees; 
+  char writeDegrees = char(map(smoothHeadingDegrees, 0, 360, 0, 255));
+  Serial.print(writeDegrees);
+  //return smoothHeadingDegrees;
 
   delay(30);
 
