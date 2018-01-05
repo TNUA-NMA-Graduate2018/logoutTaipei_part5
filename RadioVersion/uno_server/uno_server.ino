@@ -66,6 +66,7 @@ void loop() {
     case 3: LedChangeOhyeah (3); break;
 
   }
+  motor();
 }
 
 
