@@ -1,11 +1,19 @@
 #include <SPI.h>
 #include "RF24.h"
+#include <Servo.h>
 
 #include <Adafruit_NeoPixel.h>
 
 int pixelNumber = 120;
 Adafruit_NeoPixel stripA = Adafruit_NeoPixel(pixelNumber, 5, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripB = Adafruit_NeoPixel(pixelNumber, 6, NEO_GRB + NEO_KHZ800);
+Servo myservo; 
+
+const int servoPin = 9; // the digital pin used for the servo
+float nowDegree = 110;
+float easing = 0.01;
+float easDegree = 110;
+int angle = 0 ;
 
 int value = 1;
 
@@ -40,6 +48,10 @@ void setup() {
 
   stripA.begin();
   stripB.begin();
+  
+  myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
+  myservo.write(nowDegree);
+  delay(1000);
 }
 
 void loop() {
@@ -193,3 +205,12 @@ uint32_t Wheel(byte WheelPos) {
   }
 }
 
+
+void motor() {
+  myservo.write((int)nowDegree);      // move the servo to 180, max speed, wait until done
+  angle += 5; //可以控制去程的時間(加的數字越大 轉的時間越短)
+  nowDegree = 110 + (20 * sin(radians(angle)));//＊sin前的那個數字 控制轉速
+  //nowDegree += (easDegree - nowDegree) * easing;
+  delay(300);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
+
+}
