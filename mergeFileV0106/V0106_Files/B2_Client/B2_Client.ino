@@ -3,6 +3,10 @@
 #include <Wire.h>
 #include <HMC5883L.h>
 
+//***********//
+//7 8 要換 1 3
+//***********//
+
 HMC5883L compass; //陀螺儀內定A4A5
 RF24 rf24(1, 3); // CE腳, CSN腳
 const byte addr[] = "1Node";
