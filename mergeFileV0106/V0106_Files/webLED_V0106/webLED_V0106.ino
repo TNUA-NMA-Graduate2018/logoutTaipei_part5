@@ -12,6 +12,7 @@ int valueold = 0;
 //Hello I changed
 
 WiFiServer server(80);
+WiFiClient client;
 
 void setup() {
   Serial.begin(115200);
@@ -43,74 +44,70 @@ void setup() {
 
 }
 void loop() {
-  
+
   //LedChangeOhyeah (value);
-  WiFiClient client = server.available();
+  client = server.available();
+
   if (!client) {
+    LedChangeOhyeah (value);
     return;
   }
-  else{
-     LedChangeOhyeah(value);
-  }
-  Serial.println("new client");
-  while (!client.available()) {
-    delay(1);
-  }
-  String request = client.readStringUntil('\r');
-  Serial.println(request);
-  client.flush();
-
-  //value = LOW;
-  if (request.indexOf("/LED=one") != -1) {
-    //LedChangeOhyeah (1);
-    value = 1;
-  }
-  if (request.indexOf("/LED=two") != -1) {
-    //LedChangeOhyeah (2);
-    value = 2;
-  }
-  if (request.indexOf("/LED=three") != -1) {
-    //LedChangeOhyeah (3);
-    value = 3;
-  }
-
-  switch (value) {
-
-    case 1: LedChangeOhyeah (1); break;
-    case 2: LedChangeOhyeah (2); break;
-    case 3: LedChangeOhyeah (3); break;
-
-  }
-
-  client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html");
-  client.println("");
-  client.print("<!DOCTYPE HTML>");
-  client.println("<html>");
-
-  client.print("Led pin is now: ");
-
-  if (value == 1) {
-    client.print("one");
-  } else if (value == 2) {
-    client.print("two");
-  }
-  else if (value == 3) {
-    client.print("three");
-  }
   else {
-    client.print("one");
+    Serial.println("new client");
+    while (!client.available()) {
+      delay(1);
+    }
+    String request = client.readStringUntil('\r');
+    Serial.println(request);
+    client.flush();
+
+    //if (request.indexOf("/LED=one") != -1 || request.indexOf("/LED=two") != -1 || request.indexOf("/LED=three") != -1) {
+    //value = LOW;
+    if (request.indexOf("/LED=one") != -1) {
+      //LedChangeOhyeah (1);
+      value = 1;
+    }
+    if (request.indexOf("/LED=two") != -1) {
+      //LedChangeOhyeah (2);
+      value = 2;
+    }
+    if (request.indexOf("/LED=three") != -1) {
+      //LedChangeOhyeah (3);
+      value = 3;
+    }
+
+
+    Serial.print("running: ");
+    Serial.print(value);
+    client.println("HTTP/1.1 200 OK");
+    client.println("Content-Type: text/html");
+    client.println("");
+    client.print("<!DOCTYPE HTML>");
+    client.println("<html>");
+    client.print("Led pin is now: ");
+    if (value == 1) {
+      client.print("one");
+    } else if (value == 2) {
+      client.print("two");
+    }
+    else if (value == 3) {
+      client.print("three");
+    }
+    else {
+      client.print("one");
+    }
+    client.println("<br><br>");
+    client.println("Click <a href=\"/LED=one\">here</a> turn the LED pin D7 to mode one<br>");
+    client.println("Click <a href=\"/LED=two\">here</a> turn the LED  pin D7 to mode two<br>");
+    client.println("Click <a href=\"/LED=three\">here</a> turn the LED  pin D7 to mode three<br>");
+    client.println("</html>");
+    delay(1);
+    Serial.println("Client disconnected");
+    Serial.println("");
+
+
   }
-  client.println("<br><br>");
-  client.println("Click <a href=\"/LED=one\">here</a> turn the LED pin D7 to mode one<br>");
-  client.println("Click <a href=\"/LED=two\">here</a> turn the LED  pin D7 to mode two<br>");
-  client.println("Click <a href=\"/LED=three\">here</a> turn the LED  pin D7 to mode three<br>");
-  client.println("</html>");
- 
-  delay(1);
-  Serial.println("Client disconnected");
-  Serial.println("");
-  
+
 }
 
 
