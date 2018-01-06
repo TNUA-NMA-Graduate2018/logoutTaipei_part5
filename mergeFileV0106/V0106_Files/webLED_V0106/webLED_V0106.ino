@@ -1,4 +1,5 @@
 
+
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
 int pixelNumber = 120;
@@ -22,7 +23,7 @@ void setup() {
   //const char* password = "ydeok89348";
   Serial.println();
   Serial.print("Connecting to ");
-  WiFi.begin("dlink-DC88", "ydeok89348");
+  WiFi.begin("GTA5", "00000000");
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     delay(500);
@@ -42,10 +43,14 @@ void setup() {
 
 }
 void loop() {
+  
   //LedChangeOhyeah (value);
   WiFiClient client = server.available();
   if (!client) {
     return;
+  }
+  else{
+     LedChangeOhyeah(value);
   }
   Serial.println("new client");
   while (!client.available()) {
@@ -101,11 +106,11 @@ void loop() {
   client.println("Click <a href=\"/LED=two\">here</a> turn the LED  pin D7 to mode two<br>");
   client.println("Click <a href=\"/LED=three\">here</a> turn the LED  pin D7 to mode three<br>");
   client.println("</html>");
-
+ 
   delay(1);
   Serial.println("Client disconnected");
   Serial.println("");
-
+  
 }
 
 
