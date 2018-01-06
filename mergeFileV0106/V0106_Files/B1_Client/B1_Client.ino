@@ -4,16 +4,16 @@
 #include <HMC5883L.h>
 
 HMC5883L compass; //陀螺儀內定A4A5
-RF24 rf24(7, 8); // CE腳, CSN腳
+RF24 rf24(1, 3); // CE腳, CSN腳
 const byte addr[] = "1Node";
 byte pipe = 1;  // 指定通道編號
 
-boolean modeChange = 1; //0 =selfs  1=other
+boolean modeChange = 0; //0 =selfs  1=other
 const int modeChanging = 3;
 //Radio Used 7,8,11,12,13
-const int RelayR1 = 1;//4
+const int RelayR1 = 7;//4
 const int RelayR2 = 2;//5
-const int RelayR3 = 3;//6
+const int RelayR3 = 8;//6
 const int RelayR4 = 4;//7
 
 const int RelayL1 = 5;//8
@@ -21,8 +21,10 @@ const int RelayL2 = 6;//9
 const int RelayL3 = 9;//10
 const int RelayL4 = 10;//11
 
-const int resR = A0;
-const int resL = A1;
+const int resR = A3;
+const int resL = A2;
+int ToSelfRight = 0;
+int ToSelfLeft = 0;
 
 const int testHigh = 100;
 const int testLow = 150;
@@ -58,12 +60,13 @@ void setup() {
 
   while (!compass.begin())
   {
+    Serial.println("Hi");
     delay(500);
   }
 
   // Set measurement range
   compass.setRange(HMC5883L_RANGE_1_3GA);
-
+  //
   // Set measurement mode
   compass.setMeasurementMode(HMC5883L_CONTINOUS);
 
@@ -79,15 +82,25 @@ void setup() {
 
 void loop() {
   //modeChange = digitalRead(modeChanging);
+  //Serial.println("1");
   if (!modeChange) {
+
     ConnectCheck();
-    sliderControlSelf(resR, resL);
+
+    ToSelfRight = slider(resR);
+    ToSelfLeft = slider(resL);
+    sliderControlSelf(ToSelfRight, ToSelfLeft);
   }
   else {
     ConnectCheck();
     sliderControlByOther(FromOtherR, FromOtherL);
   }
   detectDegree();
+}
+int slider(int sliderInput) {
+  int sli = analogRead(sliderInput);
+  int value = int(map(sli, 0, 1024, 0, 255));
+  return value ;
 }
 void ConnectCheck() {
   if (rf24.available(&pipe)) {
@@ -133,7 +146,7 @@ void ConnectCheck() {
     }
   }
 }
-void sliderControlByOther(int FromOtherR, int FromOtherL) {
+void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
   Rgoahead(FromOtherR);
   Rgoback(FromOtherR);
   Rnomove(FromOtherR);
@@ -144,7 +157,11 @@ void sliderControlByOther(int FromOtherR, int FromOtherL) {
 }
 
 
-void sliderControlSelf(int resValueR, int resValueL) {
+void sliderControlSelf(int resValueL, int resValueR) {//change left right
+  Serial.print("L :");
+  Serial.print(resValueL);
+  Serial.print("\tR :");
+  Serial.println(resValueR);
   Rgoahead(resValueR);
   Rgoback(resValueR);
   Rnomove(resValueR);
@@ -173,7 +190,7 @@ void Rgoback(int valuein) {
 }
 
 void Rnomove(int valuein) {
-  if (valuein < testHigh && valuein > testLow) {
+  if (valuein <= testHigh && valuein >= testLow) {
     digitalWrite(RelayR1, HIGH);
     digitalWrite(RelayR2, HIGH);
     digitalWrite(RelayR3, HIGH);
@@ -201,7 +218,7 @@ void Lgoback(int valuein) {
 }
 
 void Lnomove(int valuein) {
-  if (valuein < testHigh && valuein > testLow) {
+  if (valuein <= testHigh && valuein >= testLow) {
     digitalWrite(RelayL1, HIGH);
     digitalWrite(RelayL2, HIGH);
     digitalWrite(RelayL3, HIGH);
@@ -257,7 +274,7 @@ void detectDegree() {
   previousDegree = smoothHeadingDegrees;
 
   char writeDegrees = char(map(smoothHeadingDegrees, 0, 360, 0, 255));
-  Serial.print(writeDegrees);
+  //Serial.print(writeDegrees);
   //return smoothHeadingDegrees;
 
   delay(30);
