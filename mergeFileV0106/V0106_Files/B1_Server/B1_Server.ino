@@ -61,8 +61,6 @@ void loop() {
     ToOtherLeft = slider(readSlider2);
     SendClient(ToOtherLeft, ToOtherRight);
   }
-  
-  
   motor();
 }
 void SendControlChange(int control) {

@@ -3,8 +3,12 @@
 #include <Wire.h>
 #include <HMC5883L.h>
 
+//***********//
+//7 8 要換 1 3
+//***********//
+
 HMC5883L compass; //陀螺儀內定A4A5
-RF24 rf24(1, 3); // CE腳, CSN腳
+RF24 rf24(0, 3); // CE腳, CSN腳
 const byte addr[] = "1Node";
 byte pipe = 1;  // 指定通道編號
 
@@ -21,13 +25,13 @@ const int RelayL2 = 6;//9
 const int RelayL3 = 9;//10
 const int RelayL4 = 10;//11
 
-const int resR = A3;
-const int resL = A2;
+const int resR = A1;
+const int resL = A0;
 int ToSelfRight = 0;
 int ToSelfLeft = 0;
 
-const int testHigh = 100;
-const int testLow = 150;
+const int testHigh = 165;
+const int testLow = 80;
 
 int FromOtherR = 0;
 int FromOtherL = 0;
@@ -57,27 +61,27 @@ void setup() {
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
+  /*
+    while (!compass.begin())
+    {
+      Serial.println("Hi");
+      delay(500);
+    }
 
-  while (!compass.begin())
-  {
-    Serial.println("Hi");
-    delay(500);
-  }
+    // Set measurement range
+    compass.setRange(HMC5883L_RANGE_1_3GA);
+    //
+    // Set measurement mode
+    compass.setMeasurementMode(HMC5883L_CONTINOUS);
 
-  // Set measurement range
-  compass.setRange(HMC5883L_RANGE_1_3GA);
-  //
-  // Set measurement mode
-  compass.setMeasurementMode(HMC5883L_CONTINOUS);
+    // Set data rate
+    compass.setDataRate(HMC5883L_DATARATE_30HZ);
 
-  // Set data rate
-  compass.setDataRate(HMC5883L_DATARATE_30HZ);
+    // Set number of samples averaged
+    compass.setSamples(HMC5883L_SAMPLES_8);
 
-  // Set number of samples averaged
-  compass.setSamples(HMC5883L_SAMPLES_8);
-
-  // Set calibration offset. See HMC5883L_calibration.ino
-  compass.setOffset(0, 0);
+    // Set calibration offset. See HMC5883L_calibration.ino
+    compass.setOffset(0, 0);*/
 }
 
 void loop() {
@@ -85,17 +89,25 @@ void loop() {
   //Serial.println("1");
   if (!modeChange) {
 
-    ConnectCheck();
+    //    ConnectCheck();
+
 
     ToSelfRight = slider(resR);
-    ToSelfLeft = slider(resL);
+    ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
+
+    Serial.print("L :");
+    Serial.print(ToSelfLeft);
+    Serial.print("\tR :");
+    Serial.println(ToSelfRight);
+
     sliderControlSelf(ToSelfRight, ToSelfLeft);
   }
   else {
     ConnectCheck();
     sliderControlByOther(FromOtherR, FromOtherL);
   }
-  detectDegree();
+  delay(30);
+  // detectDegree();
 }
 int slider(int sliderInput) {
   int sli = analogRead(sliderInput);
@@ -158,10 +170,7 @@ void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
 
 
 void sliderControlSelf(int resValueL, int resValueR) {//change left right
-  Serial.print("L :");
-  Serial.print(resValueL);
-  Serial.print("\tR :");
-  Serial.println(resValueR);
+
   Rgoahead(resValueR);
   Rgoback(resValueR);
   Rnomove(resValueR);

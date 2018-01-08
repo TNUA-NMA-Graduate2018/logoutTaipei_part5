@@ -41,7 +41,7 @@ void loop() {
   returnDegree = detectDegree();
 //  returnMotor = motor();
 //  Serial.print("heading: ");
-  Serial.print(returnDegree);
+  //Serial.println(returnDegree);
 //  Serial.print(" motor: ");
 //  Serial.println(returnMotor);
   delay(50);
@@ -112,10 +112,10 @@ int detectDegree() {
 
   delay(30);
 
-  
+ Serial.println(smoothHeadingDegrees);
+ 
   return smoothHeadingDegrees;
   //char writeDegrees = char(map(smoothHeadingDegrees, 0, 360, 0, 255));
-  //Serial.write(writeDegrees);
-
+  
 
 }
