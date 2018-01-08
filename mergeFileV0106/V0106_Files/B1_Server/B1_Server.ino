@@ -4,8 +4,8 @@
 
 Servo myservo;
 int value = 1;//LED模式
-int Mode = 0; //輪椅模式
-int ModeChanged = 0; //輪椅模式確認
+int Mode = 1; //輪椅模式
+int ModeChanged = 1; //輪椅模式確認
 
 //0自控 1互控
 
@@ -44,11 +44,8 @@ void setup() {
 }
 
 void loop() {
-
   int readNum = analogRead(A3);
-  //  Serial.println(readNum);
-
-  //Serial.println(readNum);
+  Serial.println(readNum);
   if (readNum < 512) {//自控
     ModeChanged = 0;
   }
@@ -71,19 +68,18 @@ void loop() {
     SendClient(ToOtherLeft, ToOtherRight);
   }
   motor();
-delay(50);
 
 }
 void SendControlChange(int control) {
   char msg[16] = "0";
   if (control == 0) {
-    msg[0] = '0';
+    msg[0] = 'A';
   }
   else {
-    msg[0] = '1';
+    msg[0] = 'B';
   }
   rf24.write(&msg, sizeof(msg));  // 傳送資料
-  delay(100);
+  delay(50);
 }
 void SendClient(int sendToOtherL, int sendToOtherR) {
   char msgTempA[16] = "0";
@@ -116,7 +112,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   //Serial.println(msg);
   //Serial.println(output);
   rf24.write(&msg, sizeof(msg));  // 傳送資料
-  delay(100);
+  delay(50);
 }
 int slider(int slider) {
   int sli = analogRead(slider);
@@ -131,6 +127,6 @@ void motor() {
   angle += 5; //可以控制去程的時間(加的數字越大 轉的時間越短)
   nowDegree = 110 + (20 * sin(radians(angle)));//＊sin前的那個數字 控制轉速
   //nowDegree += (easDegree - nowDegree) * easing;
-  delay(100);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
+  delay(50);//控制回程時間，delay越短 轉的時間越短 甚至不回轉 但時間加長去程的時間也會加長
 }
 
