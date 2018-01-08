@@ -4,8 +4,10 @@
 
 Servo myservo;
 int value = 1;//LED模式
-int Mode = 1; //輪椅模式
-int ModeChanged = 1; //輪椅模式確認
+int Mode = 0; //輪椅模式
+int ModeChanged = 0; //輪椅模式確認
+
+//0自控 1互控
 
 const int servoPin = 9; // the digital pin used for the servo
 float nowDegree = 110;
@@ -30,38 +32,47 @@ void setup() {
   rf24.setPALevel(RF24_PA_MIN);   // 設定廣播功率
   rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
   rf24.stopListening();       // 停止偵聽；設定成發射模式
-
+  //
   pinMode(readSlider1, INPUT);
   pinMode(readSlider2, INPUT);
-  pinMode(A2, INPUT); //可變電阻調LED
+  //  pinMode(A2, INPUT); //可變電阻調LED
   pinMode(A3, INPUT); //調整輪椅模式
-
+  //
   myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
   myservo.write(nowDegree);
   delay(1000);
 }
 
 void loop() {
-  if (analogRead(A3) < 128) {//自控
+
+  int readNum = analogRead(A3);
+  //  Serial.println(readNum);
+
+  //Serial.println(readNum);
+  if (readNum < 512) {//自控
     ModeChanged = 0;
   }
-  else {//互控
+  else if (readNum >= 512) { //互控
     ModeChanged = 1;
   }
-  if (Mode = 0 && ModeChanged == 1) {
+
+  if (Mode == 0 && ModeChanged == 1) {
     SendControlChange(ModeChanged);
     Mode = 1;
   }
-  if (Mode = 1 && ModeChanged == 0) {
+  if (Mode == 1 && ModeChanged == 0) {
     SendControlChange(ModeChanged);
     Mode = 0;
   }
+
   if (Mode == 1) {
     ToOtherRight = slider(readSlider1);
     ToOtherLeft = slider(readSlider2);
     SendClient(ToOtherLeft, ToOtherRight);
   }
   motor();
+delay(50);
+
 }
 void SendControlChange(int control) {
   char msg[16] = "0";
