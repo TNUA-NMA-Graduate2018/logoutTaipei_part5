@@ -4,7 +4,7 @@
 #include <HMC5883L.h>
 
 //***********//
-//7 8 要換 1 3
+//7 8 要換 0 3
 //***********//
 
 HMC5883L compass; //陀螺儀內定A4A5
@@ -27,14 +27,14 @@ const int RelayL4 = 10;//11
 
 const int resR = A1;
 const int resL = A0;
-int ToSelfRight = 0;
-int ToSelfLeft = 0;
+int ToSelfRight = 140;
+int ToSelfLeft = 140;
 
 const int testHigh = 165;
 const int testLow = 80;
 
-int FromOtherR = 0;
-int FromOtherL = 0;
+int FromOtherR = 140;
+int FromOtherL = 140;
 int previousDegree;
 int returnDegree;
 
@@ -56,8 +56,8 @@ void setup() {
   pinMode(modeChanging, INPUT);
   rf24.begin();
   rf24.setChannel(83);  // 設定頻道編號
-  rf24.setPALevel(RF24_PA_MIN);
-  rf24.setDataRate(RF24_250KBPS);
+  rf24.setPALevel(RF24_PA_MAX);
+  rf24.setDataRate(RF24_1MBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
@@ -112,6 +112,7 @@ void ConnectCheck() {
     char mg[16] = "";
     rf24.read(&mg, sizeof(mg));
 
+      Serial.println(mg);
     if (modeChange) {
       FromOtherL = 0;
       FromOtherR = 0;
@@ -125,7 +126,7 @@ void ConnectCheck() {
           modeChange = 0;//自控
         }
       }
-      else {
+      else if (mg[0] >= '0' && mg[0] <= '9') {
         do {
           if (mg[s] == ' ')now = 1;
           else if (now == 0 && mg[s] >= '0' &&  mg[s] <= '9') {
@@ -138,6 +139,10 @@ void ConnectCheck() {
           s++;
         } while (mg[s] != ';');
       }
+
+      Serial.print(FromOtherL);
+      Serial.print("\t");
+      Serial.println(FromOtherR);
     }
     else {
       if (mg[0] == 'B' || mg[0] == 'A') {

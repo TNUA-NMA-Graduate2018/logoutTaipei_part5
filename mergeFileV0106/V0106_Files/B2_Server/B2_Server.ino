@@ -21,16 +21,16 @@ const byte addr[] = "1Node";
 const int readSlider1 = A0;
 const int readSlider2 = A1;
 
-int ToOtherRight = 0;
-int ToOtherLeft = 0;
+int ToOtherRight = 140;
+int ToOtherLeft = 140;
 
 void setup() {
   Serial.begin(115200);
   rf24.begin();
   rf24.setChannel(86);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
-  rf24.setPALevel(RF24_PA_MIN);   // 設定廣播功率
-  rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
+  rf24.setPALevel(RF24_PA_MAX);   // 設定廣播功率
+  rf24.setDataRate(RF24_1MBPS); // 設定傳輸速率
   rf24.stopListening();       // 停止偵聽；設定成發射模式
   //
   pinMode(readSlider1, INPUT);
@@ -64,10 +64,11 @@ void loop() {
 
   if (Mode == 1) {
     ToOtherRight = slider(readSlider1);
-    ToOtherLeft = slider(readSlider2);
+    ToOtherLeft = map(slider(readSlider2), 0, 255, 255, 0);
     SendClient(ToOtherLeft, ToOtherRight);
   }
   motor();
+  delay(50);
 
 }
 void SendControlChange(int control) {
