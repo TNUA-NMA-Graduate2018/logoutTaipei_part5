@@ -55,33 +55,33 @@ void setup() {
   pinMode(resL, INPUT);
   pinMode(modeChanging, INPUT);
   rf24.begin();
-  rf24.setChannel(86);  // 設定頻道編號
-  rf24.setPALevel(RF24_PA_MAX);
-  rf24.setDataRate(RF24_1MBPS);
+  rf24.setChannel(81);  // 設定頻道編號
+  rf24.setPALevel(RF24_PA_MIN);
+  rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-  while (!compass.begin())
-  {
-    Serial.println("Hi");
-    delay(500);
-  }
+  //  while (!compass.begin())
+  //  {
+  //    Serial.println("Hi");
+  //    delay(500);
+  //  }
 
   // Set measurement range
-  compass.setRange(HMC5883L_RANGE_1_3GA);
+  //compass.setRange(HMC5883L_RANGE_1_3GA);
   //
   // Set measurement mode
-  compass.setMeasurementMode(HMC5883L_CONTINOUS);
+  //compass.setMeasurementMode(HMC5883L_CONTINOUS);
 
   // Set data rate
-  compass.setDataRate(HMC5883L_DATARATE_30HZ);
+  //compass.setDataRate(HMC5883L_DATARATE_30HZ);
 
   // Set number of samples averaged
-  compass.setSamples(HMC5883L_SAMPLES_8);
+  //compass.setSamples(HMC5883L_SAMPLES_8);
 
   // Set calibration offset. See HMC5883L_calibration.ino
-  compass.setOffset(0, 0);
+  //compass.setOffset(0, 0);
 }
 
 void loop() {
@@ -100,7 +100,7 @@ void loop() {
     sliderControlByOther(FromOtherR, FromOtherL);
   }
   delay(50);
-  detectDegree();
+  //detectDegree();
 }
 int slider(int sliderInput) {
   int sli = analogRead(sliderInput);

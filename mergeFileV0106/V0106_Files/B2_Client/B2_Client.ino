@@ -15,9 +15,9 @@ byte pipe = 1;  // 指定通道編號
 boolean modeChange = 1; //0 =selfs  1=other
 const int modeChanging = 3;
 //Radio Used 7,8,11,12,13
-const int RelayR1 = 7;//4
+const int RelayR1 = 1;//4
 const int RelayR2 = 2;//5
-const int RelayR3 = 8;//6
+const int RelayR3 = 3;//6
 const int RelayR4 = 4;//7
 
 const int RelayL1 = 5;//8
@@ -55,33 +55,33 @@ void setup() {
   pinMode(resL, INPUT);
   pinMode(modeChanging, INPUT);
   rf24.begin();
-  rf24.setChannel(83);  // 設定頻道編號
-  rf24.setPALevel(RF24_PA_MAX);
-  rf24.setDataRate(RF24_1MBPS);
+  rf24.setChannel(85);  // 設定頻道編號
+  rf24.setPALevel(RF24_PA_MIN);
+  rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-  while (!compass.begin())
-  {
-    Serial.println("Hi");
-    delay(500);
-  }
+  //  while (!compass.begin())
+  //  {
+  //    Serial.println("Hi");
+  //    delay(500);
+  //  }
 
   // Set measurement range
-  compass.setRange(HMC5883L_RANGE_1_3GA);
+  //compass.setRange(HMC5883L_RANGE_1_3GA);
   //
   // Set measurement mode
-  compass.setMeasurementMode(HMC5883L_CONTINOUS);
+  //compass.setMeasurementMode(HMC5883L_CONTINOUS);
 
   // Set data rate
-  compass.setDataRate(HMC5883L_DATARATE_30HZ);
+  //compass.setDataRate(HMC5883L_DATARATE_30HZ);
 
   // Set number of samples averaged
-  compass.setSamples(HMC5883L_SAMPLES_8);
+  //compass.setSamples(HMC5883L_SAMPLES_8);
 
   // Set calibration offset. See HMC5883L_calibration.ino
-  compass.setOffset(0, 0);
+  //compass.setOffset(0, 0);
 }
 
 void loop() {
@@ -93,14 +93,14 @@ void loop() {
     Serial.print(ToSelfLeft);
     Serial.print("\tR :");
     Serial.println(ToSelfRight);
-    sliderControlSelf(ToSelfRight, ToSelfLeft);
+    sliderControlSelf(ToSelfLeft, ToSelfRight);
   }
   else {
     ConnectCheck();
-    sliderControlByOther(FromOtherR, FromOtherL);
+    sliderControlByOther(FromOtherL, FromOtherR);
   }
   delay(50);
-  detectDegree();
+  //detectDegree();
 }
 int slider(int sliderInput) {
   int sli = analogRead(sliderInput);
@@ -111,8 +111,7 @@ void ConnectCheck() {
   if (rf24.available(&pipe)) {
     char mg[16] = "";
     rf24.read(&mg, sizeof(mg));
-
-      Serial.println(mg);
+    Serial.println(mg);
     if (modeChange) {
       FromOtherL = 0;
       FromOtherR = 0;
@@ -139,10 +138,6 @@ void ConnectCheck() {
           s++;
         } while (mg[s] != ';');
       }
-
-      Serial.print(FromOtherL);
-      Serial.print("\t");
-      Serial.println(FromOtherR);
     }
     else {
       if (mg[0] == 'B' || mg[0] == 'A') {
