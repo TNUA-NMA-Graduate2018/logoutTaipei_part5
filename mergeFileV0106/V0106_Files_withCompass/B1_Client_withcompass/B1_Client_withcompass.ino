@@ -62,11 +62,11 @@ void setup() {
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-    while (!compass.begin())
-    {
-      Serial.println("Hi");
-      delay(500);
-    }
+  while (!compass.begin())
+  {
+    Serial.println("Hi");
+    delay(500);
+  }
 
   // Set measurement range
   compass.setRange(HMC5883L_RANGE_1_3GA);
@@ -87,20 +87,23 @@ void setup() {
 void loop() {
   if (!modeChange) {
     ConnectCheck();
-    ToSelfRight = map(slider(resR), 0, 255, 255, 0);
-    ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
-    /*Serial.print("L :");
-    Serial.print(ToSelfLeft);
-    Serial.print("\tR :");
-    Serial.println(ToSelfRight);*/
-    sliderControlSelf(ToSelfLeft, ToSelfRight);
+    ToSelfRight = slider(resL);
+    ToSelfLeft = slider(resR);
+    Serial.print("R :");
+    Serial.print(ToSelfRight);
+    Serial.print("\tL :");
+    Serial.println(ToSelfLeft);
+
+
+    ToSelfRight = map(ToSelfRight, 0, 255, 255, 0);
+    sliderControlSelf(ToSelfRight, ToSelfLeft);
   }
   else {
     ConnectCheck();
     sliderControlByOther(FromOtherR, FromOtherL);
   }
   delay(50);
-  detectDegree();
+  //detectDegree();
 }
 int slider(int sliderInput) {
   int sli = analogRead(sliderInput);

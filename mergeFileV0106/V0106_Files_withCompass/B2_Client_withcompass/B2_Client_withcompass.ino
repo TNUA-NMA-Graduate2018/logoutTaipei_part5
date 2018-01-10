@@ -1,4 +1,4 @@
- #include <SPI.h>
+#include <SPI.h>
 #include "RF24.h"
 #include <Wire.h>
 #include <HMC5883L.h>
@@ -62,11 +62,11 @@ void setup() {
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-    while (!compass.begin())
-    {
-      Serial.println("Hi");
-      delay(500);
-    }
+  while (!compass.begin())
+  {
+    Serial.println("Hi");
+    delay(500);
+  }
 
   // Set measurement range
   compass.setRange(HMC5883L_RANGE_1_3GA);
@@ -87,8 +87,8 @@ void setup() {
 void loop() {
   if (!modeChange) {
     ConnectCheck();
-    ToSelfRight = map(slider(resR), 0, 255, 255, 0);
-    ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
+    ToSelfRight = slider(resR);
+    ToSelfLeft = slider(resL);
     /*Serial.print("R :");
     Serial.print(ToSelfLeft);
     Serial.print("\tL :");
@@ -153,11 +153,11 @@ void ConnectCheck() {
 }
 void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
   Rgoahead(FromOtherR);
-  Rgoback(FromOtherR);
+  //Rgoback(FromOtherR);
   Rnomove(FromOtherR);
 
   Lgoahead(FromOtherL);
-  Lgoback(FromOtherL);
+  //Lgoback(FromOtherL);
   Lnomove(FromOtherL);
 }
 
@@ -165,11 +165,11 @@ void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
 void sliderControlSelf(int resValueL, int resValueR) {//change left right
 
   Rgoahead(resValueR);
-  Rgoback(resValueR);
+  //Rgoback(resValueR);
   Rnomove(resValueR);
 
   Lgoahead(resValueL);
-  Lgoback(resValueL);
+  //Lgoback(resValueL);
   Lnomove(resValueL);
 }
 

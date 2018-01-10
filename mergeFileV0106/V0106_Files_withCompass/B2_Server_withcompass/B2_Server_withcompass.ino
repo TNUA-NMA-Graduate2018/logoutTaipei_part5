@@ -46,11 +46,11 @@ void setup() {
 void loop() {
   int readNum = analogRead(A3);
   Serial.println(readNum);
-  if (readNum < 512) {//自控
+  if (readNum >= 512) {//自控
     ModeChanged = 0;
     //Serial.println("hi");
   }
-  else if (readNum >= 512) { //互控
+  else if (readNum < 512) { //互控
     ModeChanged = 1;
     // Serial.println("llo");
   }
@@ -65,8 +65,9 @@ void loop() {
   }
 
   if (Mode == 1) {//控制別人後推前推改這裡
+    ToOtherLeft = map(slider(readSlider2), 0, 255, 255, 0);
     ToOtherRight = map(slider(readSlider1), 0, 255, 255, 0);
-    ToOtherLeft = slider(readSlider2);
+
     SendClient(ToOtherLeft, ToOtherRight);
   }
   //motor();
@@ -94,6 +95,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   char msg[16] = "0";
   int set = sendToOtherL;    // FirstData
   int flag = 0, flagB = 0;
+  if (sendToOtherL == 0)flag++;
   while (set > 0) {
     msgTempA[flag] = char(set % 10) + '0';
     set = set / 10;
@@ -105,6 +107,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   msg[flag++] = ' ';
   set = sendToOtherR;    // SecondData
   flagB = 0;
+  if (sendToOtherR == 0)flagB++;
   while (set > 0) {
     msgTempB[flagB] = char(set % 10) + '0';
     set = set / 10;

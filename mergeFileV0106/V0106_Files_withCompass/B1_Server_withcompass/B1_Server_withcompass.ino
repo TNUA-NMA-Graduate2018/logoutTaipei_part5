@@ -67,6 +67,8 @@ void loop() {
   if (Mode == 1) {//控制別人後推前推改這裡//控制別人後推前推改這裡
     ToOtherRight = slider(readSlider1);
     ToOtherLeft = map(slider(readSlider2), 0, 255, 255, 0);
+
+    ToOtherLeft = map(ToOtherLeft, 150, 255, 0, 255);
     SendClient(ToOtherRight, ToOtherLeft);
   }
   //motor();
