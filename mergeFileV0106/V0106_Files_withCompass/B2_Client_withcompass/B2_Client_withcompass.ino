@@ -1,4 +1,4 @@
-#include <SPI.h>
+ #include <SPI.h>
 #include "RF24.h"
 #include <Wire.h>
 #include <HMC5883L.h>
@@ -62,26 +62,26 @@ void setup() {
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-  //  while (!compass.begin())
-  //  {
-  //    Serial.println("Hi");
-  //    delay(500);
-  //  }
+    while (!compass.begin())
+    {
+      Serial.println("Hi");
+      delay(500);
+    }
 
   // Set measurement range
-  //compass.setRange(HMC5883L_RANGE_1_3GA);
+  compass.setRange(HMC5883L_RANGE_1_3GA);
   //
   // Set measurement mode
-  //compass.setMeasurementMode(HMC5883L_CONTINOUS);
+  compass.setMeasurementMode(HMC5883L_CONTINOUS);
 
   // Set data rate
-  //compass.setDataRate(HMC5883L_DATARATE_30HZ);
+  compass.setDataRate(HMC5883L_DATARATE_30HZ);
 
   // Set number of samples averaged
-  //compass.setSamples(HMC5883L_SAMPLES_8);
+  compass.setSamples(HMC5883L_SAMPLES_8);
 
   // Set calibration offset. See HMC5883L_calibration.ino
-  //compass.setOffset(0, 0);
+  compass.setOffset(0, 0);
 }
 
 void loop() {
@@ -89,10 +89,10 @@ void loop() {
     ConnectCheck();
     ToSelfRight = map(slider(resR), 0, 255, 255, 0);
     ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
-    Serial.print("R :");
+    /*Serial.print("R :");
     Serial.print(ToSelfLeft);
     Serial.print("\tL :");
-    Serial.println(ToSelfRight);
+    Serial.println(ToSelfRight);*/
     sliderControlSelf(ToSelfLeft, ToSelfRight);
   }
   else {
@@ -276,7 +276,7 @@ void detectDegree() {
   previousDegree = smoothHeadingDegrees;
 
   char writeDegrees = char(map(smoothHeadingDegrees, 0, 360, 0, 255));
-  //Serial.print(writeDegrees);
+  Serial.write(writeDegrees);
   //return smoothHeadingDegrees;
 
   delay(50);
