@@ -89,10 +89,10 @@ void loop() {
     ConnectCheck();
     ToSelfRight = map(slider(resR), 0, 255, 255, 0);
     ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
-    Serial.print("L :");
+    /*Serial.print("L :");
     Serial.print(ToSelfLeft);
     Serial.print("\tR :");
-    Serial.println(ToSelfRight);
+    Serial.println(ToSelfRight);*/
     sliderControlSelf(ToSelfLeft, ToSelfRight);
   }
   else {
