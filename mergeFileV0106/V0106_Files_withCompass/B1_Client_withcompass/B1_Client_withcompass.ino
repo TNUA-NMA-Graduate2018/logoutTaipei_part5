@@ -156,11 +156,11 @@ void ConnectCheck() {
 }
 void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
   Rgoahead(FromOtherR);
-  Rgoback(FromOtherR);
+  //Rgoback(FromOtherR);
   Rnomove(FromOtherR);
 
   Lgoahead(FromOtherL);
-  Lgoback(FromOtherL);
+  //Lgoback(FromOtherL);
   Lnomove(FromOtherL);
 }
 
@@ -168,11 +168,11 @@ void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
 void sliderControlSelf(int resValueL, int resValueR) {//change left right
 
   Rgoahead(resValueR);
-  Rgoback(resValueR);
+  //Rgoback(resValueR);
   Rnomove(resValueR);
 
   Lgoahead(resValueL);
-  Lgoback(resValueL);
+  //Lgoback(resValueL);
   Lnomove(resValueL);
 }
 
