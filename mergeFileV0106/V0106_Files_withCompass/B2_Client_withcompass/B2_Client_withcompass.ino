@@ -14,6 +14,9 @@ byte pipe = 1;  // 指定通道編號
 
 boolean modeChange = 0; //0 =selfs  1=other
 const int modeChanging = 3;
+
+int countNoSignal = 0;
+
 //Radio Used 7,8,11,12,13
 const int RelayR1 = 7;//4
 const int RelayR2 = 2;//5
@@ -31,7 +34,7 @@ int ToSelfRight = 140;
 int ToSelfLeft = 140;
 
 const int testHigh = 165;
-const int testLow = 80;
+const int testLow = 60;
 
 int FromOtherR = 140;
 int FromOtherL = 140;
@@ -56,32 +59,32 @@ void setup() {
   pinMode(modeChanging, INPUT);
   rf24.begin();
   rf24.setChannel(85);  // 設定頻道編號
-  rf24.setPALevel(RF24_PA_HIGH);
+  rf24.setPALevel(RF24_PA_LOW);
   rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-  while (!compass.begin())
-  {
-    Serial.println("Hi");
-    delay(500);
-  }
-
-  // Set measurement range
-  compass.setRange(HMC5883L_RANGE_1_3GA);
+  //  while (!compass.begin())
+  //  {
+  //    Serial.println("Hi");
+  //    delay(500);
+  //  }
   //
-  // Set measurement mode
-  compass.setMeasurementMode(HMC5883L_CONTINOUS);
-
-  // Set data rate
-  compass.setDataRate(HMC5883L_DATARATE_30HZ);
-
-  // Set number of samples averaged
-  compass.setSamples(HMC5883L_SAMPLES_8);
-
-  // Set calibration offset. See HMC5883L_calibration.ino
-  compass.setOffset(0, 0);
+  //  // Set measurement range
+  //  compass.setRange(HMC5883L_RANGE_1_3GA);
+  //  //
+  //  // Set measurement mode
+  //  compass.setMeasurementMode(HMC5883L_CONTINOUS);
+  //
+  //  // Set data rate
+  //  compass.setDataRate(HMC5883L_DATARATE_30HZ);
+  //
+  //  // Set number of samples averaged
+  //  compass.setSamples(HMC5883L_SAMPLES_8);
+  //
+  //  // Set calibration offset. See HMC5883L_calibration.ino
+  //  compass.setOffset(0, 0);
 }
 
 void loop() {
@@ -89,15 +92,21 @@ void loop() {
     ConnectCheck();
     ToSelfRight = slider(resR);
     ToSelfLeft = slider(resL);
-    /*Serial.print("R :");
-    Serial.print(ToSelfLeft);
-    Serial.print("\tL :");
-    Serial.println(ToSelfRight);*/
+
+    Serial.print("L :");
+    Serial.print(ToSelfRight);
+
+    Serial.print("\tR :");
+    Serial.println(ToSelfLeft);
     sliderControlSelf(ToSelfLeft, ToSelfRight);
   }
   else {
     ConnectCheck();
-    sliderControlByOther(FromOtherL, FromOtherR);
+    Serial.print("L :");
+    Serial.print(FromOtherR);
+    Serial.print("\tR :");
+    Serial.println(FromOtherL);
+    sliderControlByOther(FromOtherR, FromOtherL);
   }
   delay(50);
   //detectDegree();
@@ -109,6 +118,7 @@ int slider(int sliderInput) {
 }
 void ConnectCheck() {
   if (rf24.available(&pipe)) {
+    countNoSignal = 0;
     char mg[16] = "";
     rf24.read(&mg, sizeof(mg));
     Serial.println(mg);
@@ -149,30 +159,50 @@ void ConnectCheck() {
         }
       }
     }
+  } else {
+    countNoSignal++;
   }
 }
 void sliderControlByOther(int FromOtherL, int FromOtherR) { //change left right
-  Rgoahead(FromOtherR);
-  //Rgoback(FromOtherR);
-  Rnomove(FromOtherR);
 
-  Lgoahead(FromOtherL);
-  //Lgoback(FromOtherL);
-  Lnomove(FromOtherL);
+  if (countNoSignal > 30) {
+    Rreset();
+    Lreset();
+    Serial.println("Stop");
+  }
+  else {
+    //Rgoahead(FromOtherR);
+    Rgoback(FromOtherR);
+    Rnomove(FromOtherR);
+
+    //Lgoahead(FromOtherL);
+    Lgoback(FromOtherL);
+    Lnomove(FromOtherL);
+  }
 }
 
 
 void sliderControlSelf(int resValueL, int resValueR) {//change left right
-
-  Rgoahead(resValueR);
-  //Rgoback(resValueR);
+  //Rgoahead(resValueR);
+  Rgoback(resValueR);
   Rnomove(resValueR);
 
-  Lgoahead(resValueL);
-  //Lgoback(resValueL);
+  //Lgoahead(resValueL);
+  Lgoback(resValueL);
   Lnomove(resValueL);
 }
-
+void Rreset() {
+  digitalWrite(RelayR1, LOW);
+  digitalWrite(RelayR2, LOW);
+  digitalWrite(RelayR3, LOW);
+  digitalWrite(RelayR4, LOW);
+}
+void Lreset() {
+  digitalWrite(RelayL1, LOW);
+  digitalWrite(RelayL2, LOW);
+  digitalWrite(RelayL3, LOW);
+  digitalWrite(RelayL4, LOW);
+}
 void Rgoahead(int valuein) {
   if (valuein > testHigh) {
     digitalWrite(RelayR1, LOW);
@@ -184,9 +214,16 @@ void Rgoahead(int valuein) {
 
 void Rgoback(int valuein) {
   if (valuein < testLow) {
+    Serial.println("Hi");
     digitalWrite(RelayR1, HIGH);
     digitalWrite(RelayR2, LOW);
     digitalWrite(RelayR3, LOW);
+    digitalWrite(RelayR4, HIGH);
+  }
+  else {
+    digitalWrite(RelayR1, HIGH);
+    digitalWrite(RelayR2, HIGH);
+    digitalWrite(RelayR3, HIGH);
     digitalWrite(RelayR4, HIGH);
   }
 }
@@ -216,9 +253,13 @@ void Lgoback(int valuein) {
     digitalWrite(RelayL2, LOW);
     digitalWrite(RelayL3, LOW);
     digitalWrite(RelayL4, HIGH);
+  } else {
+    digitalWrite(RelayL1, HIGH);
+    digitalWrite(RelayL2, HIGH);
+    digitalWrite(RelayL3, HIGH);
+    digitalWrite(RelayL4, HIGH);
   }
 }
-
 void Lnomove(int valuein) {
   if (valuein <= testHigh && valuein >= testLow) {
     digitalWrite(RelayL1, HIGH);
