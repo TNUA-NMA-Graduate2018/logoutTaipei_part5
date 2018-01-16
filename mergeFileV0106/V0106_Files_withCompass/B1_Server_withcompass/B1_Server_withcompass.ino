@@ -68,7 +68,7 @@ void loop() {
     ToOtherRight = map(slider(readSlider1), 0, 255, 255, 0);
     ToOtherLeft = slider(readSlider2);
     //ToOtherLeft = map(ToOtherLeft,62,255,0,255)
-    ToOtherLeft = map(ToOtherLeft, 0, 76, 0, 255);
+    //ToOtherLeft = map(ToOtherLeft, 0, 76, 0, 255);
     SendClient(ToOtherLeft,ToOtherRight);
   }
   //motor();

@@ -98,6 +98,7 @@ void loop() {
     Serial.print(ToSelfRight);
     Serial.print("\tL :");
     Serial.println(ToSelfLeft);
+    
     sliderControlSelf(ToSelfRight, ToSelfLeft);
   }
   else {
