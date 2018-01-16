@@ -1,13 +1,13 @@
-
-
 #include <Adafruit_NeoPixel.h>
 #include <ESP8266WiFi.h>
-int pixelNumber = 120;
+int pixelNumber = 60;
 Adafruit_NeoPixel stripA = Adafruit_NeoPixel(pixelNumber, D6, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripB = Adafruit_NeoPixel(pixelNumber, D7, NEO_GRB + NEO_KHZ800);
 
-int value = 1;
-int valueold = 0;
+int value = 3;
+int valueold = 3;
+
+int breathBase = 0;
 
 //Hello I changed
 
@@ -17,14 +17,17 @@ WiFiClient client;
 void setup() {
   Serial.begin(115200);
   delay(10);
+  Serial.println("Hello");
   stripA.begin();
+
+  Serial.println("No");
   stripB.begin();
 
   //const char* ssid     = "dlink-DC88";
   //const char* password = "ydeok89348";
   Serial.println();
   Serial.print("Connecting to ");
-  WiFi.begin("GTA5", "00000000");
+  WiFi.begin("Yungga", "1234567812");
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
     delay(500);
@@ -48,9 +51,11 @@ void loop() {
   //LedChangeOhyeah (value);
   client = server.available();
 
+  Serial.println("hi");
   if (!client) {
     LedChangeOhyeah (value);
-    return;
+    Serial.println("lo");
+    //return;
   }
   else {
     Serial.println("new client");
@@ -116,15 +121,15 @@ void   LedChangeOhyeah (int num) {
     theaterChase(50, 5);
   }
   else if (num == 2) {
-    breath(20, 80);
-    stripA.show();
-    stripB.show();
+    breathTG(100);
   }
   else if (num == 3) {
+    Serial.println("Rainbow");
     rainbowCycle(50);
   }
   if (value != valueold) {
     valueold = value;
+    Serial.println("reset");
     for (int n = 0; n < stripA.numPixels(); n++) {
       stripA.setPixelColor(n, stripA.Color(0, 0, 0));
       stripB.setPixelColor(n, stripB.Color(0, 0, 0));
@@ -155,6 +160,17 @@ void theaterChase(int c, uint8_t wait) {
     }
   }
 }
+void breathTG(uint8_t wait) {
+  //(int)sin(breathBase)
+  int c = abs(255 * (int)sin(radians(breathBase++)));
+  for (int i = 0; i < 21; i++) {
+    stripA.setPixelColor(i, stripB.Color(c, c, c));
+    stripB.setPixelColor(i, stripB.Color(c, c, c));
+  }
+  delay(wait);
+  stripA.show();
+  stripB.show();
+}
 void breath(int c, uint8_t wait) {
   int i, j;
 
@@ -162,7 +178,6 @@ void breath(int c, uint8_t wait) {
     for (i = 0; i < stripA.numPixels(); i++) {
       stripA.setPixelColor(i, stripA.Color(c - j, c - j, c - j));
       stripB.setPixelColor(i, stripB.Color(c - j, c - j, c - j));
-
     }
     stripA.show();
     stripB.show();
@@ -178,10 +193,8 @@ void breath(int c, uint8_t wait) {
     delay(wait);
   }
 }
-
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
-
   for (j = 0; j < 128; j++) { // 5 cycles of all colors on wheel
     for (i = 0; i < stripA.numPixels(); i++) {
       stripA.setPixelColor(i, Wheel(((i * 255 / stripA.numPixels()) + j ) & 127));
@@ -191,9 +204,9 @@ void rainbowCycle(uint8_t wait) {
     stripB.show();
     //delay(wait);
   }
+  Serial.println("Rainbow");
+    
 }
-
-
 uint32_t Wheel(byte WheelPos) {
   if (WheelPos < 42) {
     return stripA.Color(WheelPos * 3, 127 - WheelPos * 3, 0);
