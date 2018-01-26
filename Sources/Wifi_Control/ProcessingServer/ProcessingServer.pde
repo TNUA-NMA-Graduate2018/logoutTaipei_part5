@@ -8,7 +8,7 @@
 
 import processing.net.*;
 
-int portA = 10001;
+int portA = 10002;
 int portB = 10004;
 boolean myServerARunning = true;
 boolean myServerBRunning = true;
