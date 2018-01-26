@@ -36,8 +36,6 @@ void setup() {
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
-
-
   Serial.println("Goodnight moon!");
 
   // set the data rate for the SoftwareSerial port
@@ -49,11 +47,12 @@ void loop() { // run over and over
   if (mySerial.available()) {
     Serial.print("===>");
     Serial.println(mySerial.read());
-    
   }
-
-  if(Serial.available()){mySerial.print("AAAA");}
-  
+  if (Serial.available()) {
+    mySerial.print("AAAA");
+    boolean now = Serial.read();
+  }
+  delay(200);
   //Serial.print(counter++);
   //mySerial.print(counter++);
   //delay(1000);
