@@ -85,30 +85,30 @@ void draw()
   if (myServerARunning == true)
   {
     text("server", 15, 45);
-    Client thisClient = myServerA.available();
-    if (thisClient != null) {
-      if (thisClient.available() > 0) {
-        text("mesage from: " + thisClient.ip() + " : " + thisClient.readString(), 15, textLine);
+    Client thisClientA = myServerA.available();
+    if (thisClientA != null) {
+      if (thisClientA.available() > 0) {
+        text("mesage from: " + thisClientA.ip() + " : " + thisClientA.readString(), 15, textLine);
         textLine = textLine + 35;
         if (modeA)
-          thisClient.write(0);
+          myServerA.write(0);
         else
-          thisClient.write(1);
+          myServerA.write(1);
       }
     }
   } 
   if (myServerBRunning == true)
   {
     text("server", 15, 45);
-    Client thisClient = myServerB.available();
-    if (thisClient != null) {
-      if (thisClient.available() > 0) {
-        text("mesage from: " + thisClient.ip() + " : " + thisClient.readString(), 15, textLine);
+    Client thisClientB = myServerB.available();
+    if (thisClientB != null) {
+      if (thisClientB.available() > 0) {
+        text("mesage from: " + thisClientB.ip() + " : " + thisClientB.readString(), 15, textLine);
         textLine = textLine + 35;
         if (modeB)
-          thisClient.write(0);
+          myServerB.write(0);
         else
-          thisClient.write(1);
+          myServerB.write(1);
       }
     }
   }

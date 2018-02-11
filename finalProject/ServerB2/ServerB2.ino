@@ -29,7 +29,7 @@ void setup() {
   Serial.begin(115200);
   mySerial.begin(57600);
   rf24.begin();
-  rf24.setChannel(83);       // 設定頻道編號
+  rf24.setChannel(86);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
   rf24.setPALevel(RF24_PA_MAX);   // 設定廣播功率
   rf24.setDataRate(RF24_1MBPS); // 設定傳輸速率
@@ -38,7 +38,7 @@ void setup() {
   pinMode(readSlider1, INPUT);
   pinMode(readSlider2, INPUT);
 
-  pinMode(A3, INPUT); //調整輪椅模式
+  //pinMode(A3, INPUT); //調整輪椅模式
   //
  // myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
  // myservo.write(nowDegree);

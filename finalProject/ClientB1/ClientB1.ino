@@ -1,6 +1,6 @@
 #include <SPI.h>
 #include "RF24.h"
-//#include <Wire.h>
+#include <Wire.h>
 //#include <HMC5883L.h>
 
 //HMC5883L compass; //陀螺儀內定A4A5
@@ -20,7 +20,7 @@ const int Rout2 = 6;
 const int Lout1 = 7;
 const int Lout2 = 8;
 
-const int LedM = 2;
+//const int LedM = 2;
 const int LedR = 3;
 const int LedL = 4;
 
@@ -36,7 +36,7 @@ int FromOtherR = 140;
 int FromOtherL = 140;
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(115200);
   delay(10);
 
   pinMode(Rout1, OUTPUT);
@@ -46,13 +46,13 @@ void setup() {
   //pinMode(8, OUTPUT);
   //pinMode(7, OUTPUT);
 
-  pinMode(LedM, OUTPUT);
+//  pinMode(LedM, OUTPUT);
   pinMode(LedR, OUTPUT);
   pinMode(LedL, OUTPUT);
 
   pinMode(resR, INPUT);
   pinMode(resL, INPUT);
-  pinMode(modeChanging, INPUT);
+//  pinMode(modeChanging, INPUT);
   rf24.begin();
   rf24.setChannel(86);  // 設定頻道編號
   rf24.setPALevel(RF24_PA_MAX);
@@ -61,11 +61,11 @@ void setup() {
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
 
-  while (!compass.begin())
+  /*while (!compass.begin())
   {
     Serial.println("Hi");
     delay(500);
-  }
+  }*/
   /*
     // Set measurement range
     compass.setRange(HMC5883L_RANGE_1_3GA);
@@ -88,13 +88,14 @@ void setup() {
 void loop() {
   if (!modeChange) {
     ConnectCheck();
-    ToSelfRight = slider(resR);
-    ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
-    Serial.print("L :");
-    Serial.print(ToSelfLeft);
-    Serial.print("\tR :");
-    Serial.println(ToSelfRight);
-    sliderControlSelf(ToSelfRight, ToSelfLeft);
+    //ToSelfRight = slider(resR);
+    //ToSelfLeft = map(slider(resL), 0, 255, 255, 0);
+    //Serial.print("L :");
+    //Serial.print(ToSelfLeft);
+    //Serial.print("\tR :");
+    //Serial.println(ToSelfRight);
+    //sliderControlSelf(ToSelfRight, ToSelfLeft);
+    Serial.println("Emily says stop");
   }
   else {
     ConnectCheck();
@@ -106,7 +107,7 @@ void loop() {
 
 
 void sliderControlByOther(int FromOtherR, int FromOtherL) {
-  if (countNoSignal > 30) {
+  if (countNoSignal > 3000) {
     motorstop(Rout1, Rout2);
     motorstop(Lout1, Lout2);
     Serial.println("Stop");
@@ -145,7 +146,7 @@ void sliderControlByOther(int FromOtherR, int FromOtherL) {
     }
   }
 }
-
+/*
 
 void sliderControlSelf(int resValueR, int resValueL) {
 
@@ -182,7 +183,8 @@ void sliderControlSelf(int resValueR, int resValueL) {
   }
 
 }
-
+*/
+/*
 
 int slider(int sliderInput) {
   int sli = analogRead(sliderInput);
@@ -208,7 +210,7 @@ void backward(int backspeed, const int x, const int y)
   digitalWrite(x, 0);
   digitalWrite(y, backspeed);
 }
-
+*/
 
 void ConnectCheck() {
   if (rf24.available(&pipe)) {
