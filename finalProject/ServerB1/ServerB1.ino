@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <SoftwareSerial.h>
 
-boolean inputString=1;   
+boolean inputString = 1;
 boolean stringComplete = false;
 SoftwareSerial mySerial(6, 5); // RX, TX
 
@@ -40,8 +40,8 @@ void setup() {
 
   pinMode(A3, INPUT); //調整輪椅模式
   //
- // myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
- // myservo.write(nowDegree);
+  // myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
+  // myservo.write(nowDegree);
   delay(1000);
 
 }
@@ -49,17 +49,17 @@ void setup() {
 void loop() {
   //int readNum = 0;
   mySerial.print("on");
-  mySerialFunction(); 
-  
-/*  if (readNum < 512) {//自控
-    ModeChanged = 0;
-  }
-  else if (readNum >= 512) { //互控
-    ModeChanged = 1;
-  }
-*/
-   ModeChanged=inputString;
-   Serial.println(ModeChanged);
+  mySerialFunction();
+
+  /*  if (readNum < 512) {//自控
+      ModeChanged = 0;
+    }
+    else if (readNum >= 512) { //互控
+      ModeChanged = 1;
+    }
+  */
+  ModeChanged = inputString;
+  Serial.println(ModeChanged);
   if (Mode == 0 && ModeChanged == 1) {
     SendControlChange(ModeChanged);
     Mode = 1;
@@ -74,22 +74,22 @@ void loop() {
     ToOtherLeft =  slider(readSlider2);
     SendClient(ToOtherLeft, ToOtherRight);
   }
-//  motor();
+  //  motor();
   delay(50);
 
-//  detectDegree();
+  //  detectDegree();
 }
 void mySerialFunction() {
-    //Serial.println("Hi");
-   
+  //Serial.println("Hi");
+
   while (mySerial.available()) {
-    
+
     Serial.println("here");
-    inputString=mySerial.read();
+    inputString = mySerial.read();
     Serial.println(inputString);
-     
+
     // add it to the inputString:
-    
+
   }
 }
 
