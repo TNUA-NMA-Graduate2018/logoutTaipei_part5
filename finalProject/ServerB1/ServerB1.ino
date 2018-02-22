@@ -6,9 +6,7 @@
 
 boolean inputString = 1;
 boolean stringComplete = false;
-SoftwareSerial mySerial(6, 5); // RX, TX
-
-
+//SoftwareSerial mySerial(6, 5); // RX, TX
 Servo myservo;
 int Mode = 1; //輪椅模式
 int ModeChanged = 1; //輪椅模式確認 1互控
@@ -27,7 +25,7 @@ int ToOtherLeft = 140;
 
 void setup() {
   Serial.begin(115200);
-  mySerial.begin(57600);
+  //mySerial.begin(57600);
   rf24.begin();
   rf24.setChannel(83);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
@@ -48,8 +46,8 @@ void setup() {
 
 void loop() {
   //int readNum = 0;
-  mySerial.print("on");
-  mySerialFunction();
+  //mySerial.print("on");
+  //mySerialFunction();
 
   /*  if (readNum < 512) {//自控
       ModeChanged = 0;
@@ -58,20 +56,24 @@ void loop() {
       ModeChanged = 1;
     }
   */
-  ModeChanged = inputString;
-  Serial.println(ModeChanged);
-  if (Mode == 0 && ModeChanged == 1) {
-    SendControlChange(ModeChanged);
-    Mode = 1;
-  }
-  if (Mode == 1 && ModeChanged == 0) {
-    SendControlChange(ModeChanged);
-    Mode = 0;
-  }
+  //ModeChanged = inputString;
+  //  Serial.println(ModeChanged);
+  //  if (Mode == 0 && ModeChanged == 1) {
+  //    SendControlChange(ModeChanged);
+  //    Mode = 1;
+  //  }
+  //  if (Mode == 1 && ModeChanged == 0) {
+  //    SendControlChange(ModeChanged);
+  //    Mode = 0;
+  //  }
 
   if (Mode == 1) {
     ToOtherRight = slider(readSlider1);
     ToOtherLeft =  slider(readSlider2);
+    Serial.print("Left:\t");
+    Serial.print(ToOtherLeft);
+    Serial.print("\tRight:\t");
+    Serial.println(ToOtherLeft);
     SendClient(ToOtherLeft, ToOtherRight);
   }
   //  motor();
@@ -79,6 +81,7 @@ void loop() {
 
   //  detectDegree();
 }
+/*
 void mySerialFunction() {
   //Serial.println("Hi");
 
@@ -92,7 +95,7 @@ void mySerialFunction() {
 
   }
 }
-
+*/
 void SendControlChange(int control) {
   char msg[16] = "0";
   if (control == 0) {
