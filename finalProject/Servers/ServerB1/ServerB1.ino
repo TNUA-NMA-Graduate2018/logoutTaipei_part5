@@ -7,8 +7,6 @@
 boolean inputString = 1;
 boolean stringComplete = false;
 //SoftwareSerial mySerial(6, 5); // RX, TX
-
-
 Servo myservo;
 int Mode = 1; //輪椅模式
 int ModeChanged = 1; //輪椅模式確認 1互控
@@ -29,7 +27,7 @@ void setup() {
   Serial.begin(115200);
   //mySerial.begin(57600);
   rf24.begin();
-  rf24.setChannel(84);       // 設定頻道編號
+  rf24.setChannel(83);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
   rf24.setPALevel(RF24_PA_MAX);   // 設定廣播功率
   rf24.setDataRate(RF24_1MBPS); // 設定傳輸速率
@@ -38,7 +36,7 @@ void setup() {
   pinMode(readSlider1, INPUT);
   pinMode(readSlider2, INPUT);
 
-  //pinMode(A3, INPUT); //調整輪椅模式
+  pinMode(A3, INPUT); //調整輪椅模式
   //
   // myservo.attach(servoPin);  // attaches the servo on pin 9 to the servo object
   // myservo.write(nowDegree);
@@ -58,7 +56,7 @@ void loop() {
       ModeChanged = 1;
     }
   */
-  //  ModeChanged = inputString;
+  //ModeChanged = inputString;
   //  Serial.println(ModeChanged);
   //  if (Mode == 0 && ModeChanged == 1) {
   //    SendControlChange(ModeChanged);
@@ -72,11 +70,10 @@ void loop() {
   if (Mode == 1) {
     ToOtherRight = slider(readSlider1);
     ToOtherLeft =  slider(readSlider2);
-
     Serial.print("Left:\t");
     Serial.print(ToOtherLeft);
     Serial.print("\tRight:\t");
-    Serial.println(ToOtherLeft);
+    Serial.println(ToOtherRight);
     SendClient(ToOtherLeft, ToOtherRight);
   }
   //  motor();
@@ -84,20 +81,21 @@ void loop() {
 
   //  detectDegree();
 }
-//void mySerialFunction() {
-//    //Serial.println("Hi");
-//
-//  while (mySerial.available()) {
-//
-//    Serial.println("here");
-//    inputString=mySerial.read();
-//    Serial.println(inputString);
-//
-//    // add it to the inputString:
-//
-//  }
-//}
+/*
+void mySerialFunction() {
+  //Serial.println("Hi");
 
+  while (mySerial.available()) {
+
+    Serial.println("here");
+    inputString = mySerial.read();
+    Serial.println(inputString);
+
+    // add it to the inputString:
+
+  }
+}
+*/
 void SendControlChange(int control) {
   char msg[16] = "0";
   if (control == 0) {
@@ -116,6 +114,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   char msg[16] = "0";
   int set = sendToOtherL;    // FirstData
   int flag = 0, flagB = 0;
+  if (set == 0)msgTempA[flag++] = '0';
   while (set > 0) {
     msgTempA[flag] = char(set % 10) + '0';
     set = set / 10;
@@ -128,6 +127,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
 
   set = sendToOtherR;    // SecondData
   flagB = 0;
+  if (set == 0)msgTempA[flagB++] = '0';
   while (set > 0) {
     msgTempB[flagB] = char(set % 10) + '0';
     set = set / 10;
