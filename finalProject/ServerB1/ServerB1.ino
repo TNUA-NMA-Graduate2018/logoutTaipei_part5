@@ -114,6 +114,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
   char msg[16] = "0";
   int set = sendToOtherL;    // FirstData
   int flag = 0, flagB = 0;
+  if (set == 0)msgTempA[flag++] = '0';
   while (set > 0) {
     msgTempA[flag] = char(set % 10) + '0';
     set = set / 10;
@@ -126,6 +127,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
 
   set = sendToOtherR;    // SecondData
   flagB = 0;
+  if (set == 0)msgTempA[flagB] = '0';
   while (set > 0) {
     msgTempB[flagB] = char(set % 10) + '0';
     set = set / 10;
