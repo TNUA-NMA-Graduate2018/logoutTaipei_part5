@@ -118,7 +118,7 @@ void sliderControlByOther(int FromOtherR, int FromOtherL) {
       forward(abs(FromOtherR), Rout1, Rout2);
       digitalWrite(LedR, HIGH);
     }
-    else if (FromOtherR < testLow && FromOtherR >= 1) {
+    else if (FromOtherR < testLow && FromOtherR >= 0) {
       //digitalWrite(7, LOW);
       backward(abs(FromOtherR), Rout1, Rout2);
       digitalWrite(LedR, HIGH);
@@ -134,7 +134,7 @@ void sliderControlByOther(int FromOtherR, int FromOtherL) {
       forward(abs(FromOtherL), Lout1, Lout2);
       digitalWrite(LedL, HIGH);
     }
-    else if (FromOtherL < testLow && FromOtherL >= 1) {
+    else if (FromOtherL < testLow && FromOtherL >= 0) {
       //digitalWrite(8, LOW);
       backward(abs(FromOtherL), Lout1, Lout2);
       digitalWrite(LedL, HIGH);
