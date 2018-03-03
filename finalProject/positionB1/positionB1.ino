@@ -1,57 +1,67 @@
 #include <HMC5883L.h>
 #include <SoftwareSerial.h>
 
-HMC5883L compass; //陀螺儀內定A4A5
+HMC5883L compass; //陀螺儀內定A4 SCL     A5 sda
+int counter=0;
 int previousDegree;
 int returnDegree;
-SoftwareSerial mySerial(6, 5); 
+SoftwareSerial mySerial(5,6); 
 
 void setup() {
   Serial.begin(115200);
+   mySerial.begin(57600);
   delay(10);
+  
   while (!compass.begin())
   {
     Serial.println("Hi");
     delay(500);
   }
+    
     // Set measurement range
     compass.setRange(HMC5883L_RANGE_1_3GA);
+    Serial.println("OK01");
     //
     // Set measurement mode
     compass.setMeasurementMode(HMC5883L_CONTINOUS);
-
+    Serial.println("OK02");
     // Set data rate
     compass.setDataRate(HMC5883L_DATARATE_30HZ);
+    Serial.println("OK03");
 
     // Set number of samples averaged
     compass.setSamples(HMC5883L_SAMPLES_8);
+    Serial.println("OK04");
 
     // Set calibration offset. See HMC5883L_calibration.ino
     compass.setOffset(0, 0);
-  
+    Serial.println("OK");
 }
 
 
 void loop() {
-
+  detectDegree();
+  delay(100);
+  //mySerialFunction(detectDegree());
   
-  mySerialFunction(detectDegree()); 
+  
 }
 
-void mySerialFunction(char DegreeReceive) {
-   
+void mySerialFunction(float DegreeReceive) {
+   mySerial.print(counter++);
   while (mySerial.available()) {
-
-    mySerial.println(DegreeReceive);
-    Serial.println();
+    Serial.println(DegreeReceive);
+    
+    mySerial.print(DegreeReceive);
+    mySerial.print('\n') ;
+   // delay(100);
      
     // add it to the inputString:
     
   }
 }
-
-char detectDegree() {
-
+void detectDegree() {
+  Serial.println("start detect");
   long x = micros();
   Vector norm = compass.readNormalize();
 
@@ -97,10 +107,11 @@ char detectDegree() {
 
   previousDegree = smoothHeadingDegrees;
 
-  char writeDegrees = char(map(smoothHeadingDegrees, 0, 360, 0, 255));
-  //Serial.print(writeDegrees);
-  return smoothHeadingDegrees;
+  float writeDegrees = float(map(smoothHeadingDegrees, 0, 360, 0, 255));
+  Serial.println(writeDegrees); 
+  mySerial.print(writeDegrees);
+  mySerial.print('\n');
 
-  delay(50);
+  //delay(100);
 
   }
