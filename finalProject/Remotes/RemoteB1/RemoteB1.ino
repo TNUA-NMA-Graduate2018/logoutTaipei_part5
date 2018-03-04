@@ -123,7 +123,7 @@ void SendClient(int sendToOtherL, int sendToOtherR) {
 }
 int slider(int slider) {
   int sli = analogRead(slider);
-  int value = int(map(sli, 0, 1024, 0, 255));
+  int value = int(map(sli, 0, 1024, 1, 255));
   //Serial.println(value);
   //delay(100);
   return value ;
