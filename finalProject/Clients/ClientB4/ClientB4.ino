@@ -44,7 +44,7 @@ void setup() {
   pinMode(LedL, OUTPUT);
 
   rf24.begin();
-  rf24.setChannel(82);  // 設定頻道編號
+  rf24.setChannel(84);  // 設定頻道編號
   rf24.setPALevel(RF24_PA_MAX);
   rf24.setDataRate(RF24_1MBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
