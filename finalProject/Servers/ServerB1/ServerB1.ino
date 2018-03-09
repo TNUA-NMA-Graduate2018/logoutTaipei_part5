@@ -7,10 +7,10 @@ RF24 rf24(9, 10); // CE腳, CSN腳
 
 const byte addr[] = "1Node";
 byte pipe = 1;  // 指定通道編號
-const int readLForwardButton = 4;
-const int readLBackwardButton = 5;
-const int readRForwardButton = 6;
-const int readRBackwardButton = 7;
+const int readLForwardButton = 3;
+const int readLBackwardButton = 4;
+const int readRForwardButton = 7;
+const int readRBackwardButton = 8;
 
 int ToOtherRight = 1;
 int ToOtherLeft = 1;
@@ -18,7 +18,7 @@ int ToOtherLeft = 1;
 void setup() {
   Serial.begin(115200);
   rf24.begin();
-  rf24.setChannel(81);       // 設定頻道編號
+  rf24.setChannel(82);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
   rf24.setPALevel(RF24_PA_MAX);   // 設定廣播功率
   rf24.setDataRate(RF24_1MBPS); // 設定傳輸速率
@@ -96,7 +96,7 @@ int directionDetect(int F, int B) {
     direction = 2;
     Serial.println("前進");
   }
-  else if (backward == 2) {
+  else if (backward == 1) {
     direction = 0;
     Serial.println("退後");
   }

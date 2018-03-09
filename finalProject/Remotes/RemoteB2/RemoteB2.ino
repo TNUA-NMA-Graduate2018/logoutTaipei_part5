@@ -112,7 +112,7 @@ int directionDetect(int F, int B) {
     direction = 2;
     Serial.println("前進");
   }
-  else if (backward == 2) {
+  else if (backward == 1) {
     direction = 0;
     Serial.println("退後");
   }

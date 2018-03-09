@@ -12,13 +12,16 @@ const int readLBackwardButton = 5;
 const int readRForwardButton = 6;
 const int readRBackwardButton = 7;
 
+const int readLeft = A5;
+const int readRight = A4;
+
 int ToOtherRight = 1;
 int ToOtherLeft = 1;
 
 void setup() {
   Serial.begin(115200);
   rf24.begin();
-  rf24.setChannel(83);       // 設定頻道編號
+  rf24.setChannel(84);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
   rf24.setPALevel(RF24_PA_MAX);   // 設定廣播功率
   rf24.setDataRate(RF24_1MBPS); // 設定傳輸速率
@@ -28,16 +31,32 @@ void setup() {
   pinMode(readLBackwardButton, INPUT);
   pinMode(readRForwardButton, INPUT);
   pinMode(readRBackwardButton, INPUT);
+  pinMode(readLeft, INPUT);
+  pinMode(readRight, INPUT);
 }
 
 void loop() {
-  ToOtherLeft = directionDetect(readLForwardButton, readLBackwardButton);
-  ToOtherRight =  directionDetect(readRForwardButton, readRBackwardButton);
+  ToOtherLeft = fixed(readLeft);
+  ToOtherRight = fixed(readRight);
+  //0後退 1不動 2前進
+  //ToOtherLeft = directionDetect(readLForwardButton, readLBackwardButton);
+  //ToOtherRight =  directionDetect(readRForwardButton, readRBackwardButton);
   Serial.print("Left:\t");
   Serial.print(ToOtherLeft);
   Serial.print("\tRight:\t");
   Serial.println(ToOtherRight);
   Send(ToOtherLeft, ToOtherRight);
+}
+int fixed(int pin) {
+  int data = int(map(analogRead(pin), 0, 1024, 0, 255));
+  if (data<80){
+    return 0;
+  }else if(data >= 80 && data <165){
+    return 1;
+  }
+  else if(data >=165){
+    return 2;
+  }
 }
 void Send(int toLeft, int toRight) {
   char msg[16] = "0";
@@ -96,7 +115,7 @@ int directionDetect(int F, int B) {
     direction = 2;
     Serial.println("前進");
   }
-  else if (backward == 2) {
+  else if (backward == 1) {
     direction = 0;
     Serial.println("退後");
   }

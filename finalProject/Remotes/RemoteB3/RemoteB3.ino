@@ -9,10 +9,12 @@ RF24 rf24(9, 10); // CE腳, CSN腳
 
 const byte addr[] = "1Node";
 byte pipe = 1;  // 指定通道編號
-const int readLForwardButton = 4;
-const int readLBackwardButton = 5;
-const int readRForwardButton = 6;
-const int readRBackwardButton = 7;
+//const int readLForwardButton = 4;
+//const int readLBackwardButton = 5;
+//const int readRForwardButton = 6;
+//const int readRBackwardButton = 7;
+const int readL = A0;
+const int readR = A1;
 const int readModePin = 3;
 
 int ToOtherRight = 0;
@@ -112,7 +114,7 @@ int directionDetect(int F, int B) {
     direction = 2;
     Serial.println("前進");
   }
-  else if (backward == 2) {
+  else if (backward == 1) {
     direction = 0;
     Serial.println("退後");
   }
