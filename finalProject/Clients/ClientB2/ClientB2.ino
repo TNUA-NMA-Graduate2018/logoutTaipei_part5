@@ -73,7 +73,6 @@ void controlByOther(int FromOtherL, int FromOtherR) {//0後退 1不動 2前進
       motorstop(Rout1, Rout2);
       digitalWrite(LedR, LOW);
     }
-
     if (FromOtherL == 0) {
       forward(abs(FromOtherL), Lout1, Lout2);
       digitalWrite(LedL, HIGH);
