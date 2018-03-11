@@ -10,7 +10,6 @@ RF24 rf24(9, 10); // CE腳, CSN腳
 const byte addr[] = "1Node";
 byte pipe = 1;  // 指定通道編號
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(pixelNumber, 2, NEO_GRB + NEO_KHZ800);
-
 boolean mode = 0;
 boolean modeChange = 0; //0=遙控 1=互控
 //const int modeChanging = 3;
@@ -27,7 +26,8 @@ const int LedL = 4;
 
 int fromOtherR = 1;
 int fromOtherL = 1;
-
+int fromOtherRFixed = 1;
+int fromOtherLFixed = 1;
 void setup() {
   Serial.begin(115200);
   strip.begin();
@@ -36,8 +36,6 @@ void setup() {
   pinMode(Rout2, OUTPUT);
   pinMode(Lout1, OUTPUT);
   pinMode(Lout2, OUTPUT);
-  //pinMode(8, OUTPUT);
-  //pinMode(7, OUTPUT);
 
   pinMode(Ledstrip, OUTPUT);
   pinMode(LedR, OUTPUT);
@@ -45,8 +43,8 @@ void setup() {
 
   rf24.begin();
   rf24.setChannel(82);  // 設定頻道編號
-  rf24.setPALevel(RF24_PA_MAX);
-  rf24.setDataRate(RF24_1MBPS);
+  rf24.setPALevel(RF24_PA_HIGH);
+  rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
@@ -54,49 +52,46 @@ void setup() {
 void loop() {
   connectCheck();
   controlByOther(fromOtherL, fromOtherR);
-  breath(fromOtherL, fromOtherR);
   delay(50);
 }
-
 void controlByOther(int FromOtherL, int FromOtherR) {//0後退 1不動 2前進
-  if (countNoSignal > 3000) {
+  if (countNoSignal > 50) {
     motorstop(Rout1, Rout2);
     motorstop(Lout1, Lout2);
     Serial.println("Stop");
   }
   else {
-    if (FromOtherR == 2) {
-      //digitalWrite(7, LOW);
+    if (FromOtherR == 0) {
       forward(abs(FromOtherR), Rout1, Rout2);
       digitalWrite(LedR, HIGH);
     }
-    else if (FromOtherR == 0) {
-      //digitalWrite(7, LOW);
+    else if (FromOtherR == 2) {
       backward(abs(FromOtherR), Rout1, Rout2);
       digitalWrite(LedR, HIGH);
     }
     else {
-      //digitalWrite(7, HIGH);
       motorstop(Rout1, Rout2);
       digitalWrite(LedR, LOW);
     }
 
-    if (FromOtherL == 2) {
-      //digitalWrite(8, LOW);
+    if (FromOtherL == 0) {
       forward(abs(FromOtherL), Lout1, Lout2);
       digitalWrite(LedL, HIGH);
     }
-    else if (FromOtherL == 0) {
-      //digitalWrite(8, LOW);
+    else if (FromOtherL == 2) {
       backward(abs(FromOtherL), Lout1, Lout2);
       digitalWrite(LedL, HIGH);
     }
     else {
-      //digitalWrite(8, HIGH);
       motorstop(Lout1, Lout2);
       digitalWrite(LedL, LOW);
     }
+    if (fromOtherRFixed != fromOtherR || fromOtherLFixed != fromOtherL) {
+      breath(fromOtherL, fromOtherR);
+    }
   }
+  fromOtherRFixed = fromOtherR;
+  fromOtherLFixed = fromOtherL;
 }
 void motorstop(const int x, const int y)
 {
@@ -117,89 +112,42 @@ void breath(int l, int r) {
   int i, j, a;
   for (i = 0; i < mid; i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(60 - l * 15, 10 + l * 40, 10 + l * 35 + j * 4));
-      strip.show();
+      strip.setPixelColor(i + j, strip.Color(10 + r * 40, 60 - r * 15, 10 + l * 35 + j * 4));
     }
   }
   for (i = mid; i < strip.numPixels(); i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(60 - r * 15, 10 + r * 40, 10 + r * 35 + j * 4));
-      strip.show();
+      strip.setPixelColor(i + j, strip.Color(10 + r * 40, 60 - r * 15, 10 + r * 35 + j * 4));
     }
   }
+  strip.show();
 }
 void connectCheck() {
   if (rf24.available(&pipe)) {
-    countNoSignal = 0;
     char mg[16] = "";
     rf24.read(&mg, sizeof(mg));
-    Serial.println(mg);
     //轉換遙控互動 0遙控 1互控
     if (mg[0] == 'A') {
-      mode = 0;
+      mode = 0;//遙控
+      Serial.println("遙控");
     }
     else if (mg[0] == 'B') {
-      mode = 1;
+      mode = 1;//互控
+      Serial.println("互控");
     }
-    //偵測方向 0後退 1停止 2前進
+    //偵測方向 2後退 1停止 0前進
     if (mode == 0) {
       if (mg[0] == 'R') {
+        countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';
       }
     }
     else if (mode == 1) {
       if (mg[1] == 'I') {
+        countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';
-      }
-    }
-  }
-  else {
-    countNoSignal++;
-  }
-}
-void connectCheckBackUp() {
-  if (rf24.available(&pipe)) {
-    int countNoSignal = 0;
-    char mg[16] = "";
-    rf24.read(&mg, sizeof(mg));
-    Serial.println(mg);
-    if (modeChange) {
-      fromOtherL = 0;
-      fromOtherR = 0;
-      int now = 0;
-      int s = 0;
-      if (mg[s] == 'B' || mg[s] == 'A') {
-        if (mg[s] == 'B') {
-          modeChange = 1;//互控
-        }
-        else if (mg[s] == 'A') {
-          modeChange = 0;//自控
-        }
-      }
-      else if (mg[0] >= '0' && mg[0] <= '9') {
-        do {
-          if (mg[s] == ' ')now = 1;
-          else if (now == 0 && mg[s] >= '0' &&  mg[s] <= '9') {
-            fromOtherL *= 10;
-            fromOtherL += mg[s] - '0';
-          } else if (now == 1 && mg[s] >= '0' &&  mg[s] <= '9') {
-            fromOtherR *= 10;
-            fromOtherR += mg[s] - '0';
-          }
-          s++;
-        } while (mg[s] != ';');
-      }
-    }
-    else {
-      if (mg[0] == 'B' || mg[0] == 'A') {
-        if (mg[0] == 'B') {
-          modeChange = 1;
-        }
-        else if (mg[0] == 'A') {
-          modeChange = 0;
-        }
       }
     }
   }
