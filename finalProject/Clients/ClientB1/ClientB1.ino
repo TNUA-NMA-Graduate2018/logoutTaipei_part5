@@ -3,8 +3,8 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
 
-int pixelNumber = 60;//記得改成正確的
-int mid = 30;//記得改成正確的
+int pixelNumber = 30;//記得改成正確的
+int mid = 15;//記得改成正確的
 
 RF24 rf24(9, 10); // CE腳, CSN腳
 const byte addr[] = "1Node";
@@ -15,10 +15,10 @@ boolean modeChange = 1; //0=遙控 1=互控
 //const int modeChanging = 3;
 int countNoSignal = 0;
 
-const int Rout1 = 5;
-const int Rout2 = 6;
-const int Lout1 = 7;
-const int Lout2 = 8;
+const int Lout1 = 5;
+const int Lout2 = 6;
+const int Rout1 = 7;
+const int Rout2 = 8;
 
 const int Ledstrip = 2;
 const int LedR = 3;
@@ -67,7 +67,7 @@ void controlByOther(int FromOtherL, int FromOtherR) {//0後退 1不動 2前進
     }
     else if (FromOtherR == 2) {
       backward(abs(FromOtherR), Rout1, Rout2);
-      digitalWrite(LedR, HIGH);a
+      digitalWrite(LedR, HIGH); a
     }
     else {
       motorstop(Rout1, Rout2);
@@ -112,12 +112,12 @@ void breath(int l, int r) {
   int i, j, a;
   for (i = 0; i < mid; i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(10 + l * 40, 60 - l * 15, 10 + l * 35 + j * 4));
+      strip.setPixelColor(i + j, strip.Color(5 + l * 20, 30 - l * 7, 5 + l * 12 + j * 4));
     }
   }
   for (i = mid; i < strip.numPixels(); i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(10 + r * 40, 60 - r * 15, 10 + r * 35 + j * 4));
+      strip.setPixelColor(i + j, strip.Color(5 + r * 20, 30 - r * 7, 5 + r * 12 + j * 4));
     }
   }
   strip.show();
