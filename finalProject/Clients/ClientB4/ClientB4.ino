@@ -126,6 +126,7 @@ void connectCheck() {
   if (rf24.available(&pipe)) {
     char mg[16] = "";
     rf24.read(&mg, sizeof(mg));
+    Serial.println(mg);
     //轉換遙控互動 0遙控 1互控
     if (mg[0] == 'A') {
       mode = 0;//遙控
@@ -144,7 +145,7 @@ void connectCheck() {
       }
     }
     else if (mode == 1) {
-      if (mg[1] == 'I') {
+      if (mg[0] == 'I') {
         countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';

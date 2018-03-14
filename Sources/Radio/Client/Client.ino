@@ -9,7 +9,7 @@ byte pipe = 1;  // 指定通道編號
 void setup() {
   Serial.begin(115200);
   rf24.begin();
-  rf24.setChannel(83);  // 設定頻道編號
+  rf24.setChannel(81);  // 設定頻道編號
   rf24.setPALevel(RF24_PA_MIN);
   rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
