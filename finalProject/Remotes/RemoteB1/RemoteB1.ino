@@ -26,6 +26,7 @@ void setup() {
   pinMode(readRForwardButton, INPUT);
   pinMode(readRBackwardButton, INPUT);
   pinMode(readModePin, INPUT);
+  Serial.println("nRF24L01 ready!");
 }
 void loop() {
   ToOtherLeft = directionDetect(readLForwardButton, readLBackwardButton);
@@ -36,15 +37,19 @@ void loop() {
   //  Serial.print("\tRight:\t");
   //  Serial.println(ToOtherRight);
   Send(ToOtherLeft, ToOtherRight);
+
 }
 void readMode() {
   //有電1互控 沒電0遙控
   int flag = digitalRead(readModePin);
+  Serial.println(flag);
   if (flag != mode) {
     char msg[16] = "0";
     mode = flag;
     if (mode == 0)msg[0] = 'A'; //遙控
     if (mode == 1)msg[0] = 'B'; //互控
+
+    Serial.println(msg);
     rf24.write(&msg, sizeof(msg));
     delay(100);
   }
