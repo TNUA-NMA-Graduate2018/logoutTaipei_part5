@@ -18,7 +18,7 @@ void setup() {
   rf24.begin();
   rf24.setChannel(70);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
-  rf24.setPALevel(RF24_PA_MIN);   // 設定廣播功率
+  rf24.setPALevel(RF24_PA_HIGH);   // 設定廣播功率
   rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
   rf24.stopListening();       // 停止偵聽；設定成發射模式
   pinMode(readLForwardButton, INPUT);
@@ -26,7 +26,6 @@ void setup() {
   pinMode(readRForwardButton, INPUT);
   pinMode(readRBackwardButton, INPUT);
   pinMode(readModePin, INPUT);
-  Serial.println("nRF24L01 ready!");
 }
 void loop() {
   ToOtherLeft = directionDetect(readLForwardButton, readLBackwardButton);
@@ -37,19 +36,25 @@ void loop() {
   //  Serial.print("\tRight:\t");
   //  Serial.println(ToOtherRight);
   Send(ToOtherLeft, ToOtherRight);
+  delay(100);
 
 }
 void readMode() {
   //有電1互控 沒電0遙控
   int flag = digitalRead(readModePin);
-  Serial.println(flag);
-  if (flag != mode) {
-    char msg[32] = "0";
-    mode = flag;
-    if (mode == 0)msg[0] = 'A'; //遙控
-    if (mode == 1)msg[0] = 'B'; //互控
 
-    Serial.println(msg);
+
+  if (flag != mode) {
+    char msg[16] = "0";
+    mode = flag;
+    if (mode == 0) {
+      msg[0] = 'A';  //遙控
+      Serial.println("遙控");
+    }
+    if (mode == 1) {
+      msg[0] = 'B';  //互控
+      Serial.println("互控");
+    }
     rf24.write(&msg, sizeof(msg));
     delay(100);
   }
@@ -62,7 +67,6 @@ void Send(int toLeft, int toRight) {
   msg[3] = ';';
   Serial.println(msg);
   rf24.write(&msg, sizeof(msg));
-  delay(100);
 }
 int directionDetect(int F, int B) {
   int direction = 0;    //0前進 1不動 2後退
