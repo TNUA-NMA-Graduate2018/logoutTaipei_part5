@@ -50,7 +50,7 @@ void readMode() {
   }
 }
 void Send(int toLeft, int toRight) {
-  char msg[16] = "0";
+  char msg[32] = "0";
   msg[0] = 'R';
   msg[1] = char(toLeft % 10) + '0';
   msg[2] = char(toRight % 10) + '0';

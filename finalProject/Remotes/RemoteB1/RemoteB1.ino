@@ -18,7 +18,7 @@ void setup() {
   rf24.begin();
   rf24.setChannel(70);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
-  rf24.setPALevel(RF24_PA_LOW);   // 設定廣播功率
+  rf24.setPALevel(RF24_PA_MIN);   // 設定廣播功率
   rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
   rf24.stopListening();       // 停止偵聽；設定成發射模式
   pinMode(readLForwardButton, INPUT);
@@ -44,7 +44,7 @@ void readMode() {
   int flag = digitalRead(readModePin);
   Serial.println(flag);
   if (flag != mode) {
-    char msg[16] = "0";
+    char msg[32] = "0";
     mode = flag;
     if (mode == 0)msg[0] = 'A'; //遙控
     if (mode == 1)msg[0] = 'B'; //互控
@@ -55,7 +55,7 @@ void readMode() {
   }
 }
 void Send(int toLeft, int toRight) {
-  char msg[16] = "0";
+  char msg[32] = "0";
   msg[0] = 'R';
   msg[1] = char(toLeft % 10) + '0';
   msg[2] = char(toRight % 10) + '0';

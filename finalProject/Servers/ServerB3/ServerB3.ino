@@ -38,7 +38,7 @@ void loop() {
   Send(ToOtherLeft, ToOtherRight);
 }
 void Send(int toLeft, int toRight) {
-  char msg[16] = "0";
+  char msg[16] = "1";
   msg[0] = 'I'; //互動
   msg[1] = char(toLeft % 10) + '0';
   msg[2] = char(toRight % 10) + '0';

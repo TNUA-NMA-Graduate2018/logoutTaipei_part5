@@ -43,7 +43,7 @@ void setup() {
 
   rf24.begin();
   rf24.setChannel(70);  // 設定頻道編號
-  rf24.setPALevel(RF24_PA_LOW);
+  rf24.setPALevel(RF24_PA_MIN);
   rf24.setDataRate(RF24_250KBPS);
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
