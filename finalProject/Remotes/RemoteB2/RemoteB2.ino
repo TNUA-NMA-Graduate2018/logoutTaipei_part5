@@ -4,7 +4,7 @@ int mode = 0; //輪椅模式
 int modeChanged = 0; //輪椅模式確認
 //0遙控 1互動
 RF24 rf24(9, 10); // CE腳, CSN腳
-const byte addr[] = "1Node";
+const byte addr[] = "2Node";
 byte pipe = 1;  // 指定通道編號
 const int readLForwardButton = 4;
 const int readLBackwardButton = 5;
@@ -36,16 +36,14 @@ void loop() {
   //  Serial.print("\tRight:\t");
   //  Serial.println(ToOtherRight);
   Send(ToOtherLeft, ToOtherRight);
-  delay(100);
+  delay(300);
 
 }
 void readMode() {
   //有電1互控 沒電0遙控
   int flag = digitalRead(readModePin);
-
-
   if (flag != mode) {
-    char msg[16] = "0";
+    char msg[32] = "0";
     mode = flag;
     if (mode == 0) {
       msg[0] = 'A';  //遙控
@@ -55,8 +53,10 @@ void readMode() {
       msg[0] = 'B';  //互控
       Serial.println("互控");
     }
-    rf24.write(&msg, sizeof(msg));
-    delay(100);
+    for (int s = 0; s < 4; s++) {
+      rf24.write(&msg, sizeof(msg));
+      delay(200);
+    }
   }
 }
 void Send(int toLeft, int toRight) {

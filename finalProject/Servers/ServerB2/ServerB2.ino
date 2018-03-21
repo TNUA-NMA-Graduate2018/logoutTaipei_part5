@@ -45,7 +45,7 @@ void Send(int toLeft, int toRight) {
   msg[3] = ';';
   Serial.println(msg);
   rf24.write(&msg, sizeof(msg));
-  delay(100);
+  delay(300);
 }
 int directionDetect(int F, int B) {
   int direction = 0;    //0後退 1不動 2前進

@@ -4,7 +4,7 @@
 //0遙控 1互動
 
 RF24 rf24(9, 10); // CE腳, CSN腳
-const byte addr[] = "1Node";
+const byte addr[] = "2Node";
 byte pipe = 1;  // 指定通道編號
 const int readLForwardButton = 4;
 const int readLBackwardButton = 5;
@@ -45,7 +45,7 @@ void Send(int toLeft, int toRight) {
   msg[3] = ';';
   Serial.println(msg);
   rf24.write(&msg, sizeof(msg));
-  delay(100);
+  delay(300);
 }
 int directionDetect(int F, int B) {
   int direction = 0;    //0後退 1不動 2前進
