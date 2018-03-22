@@ -41,7 +41,7 @@ void setup() {
 
 void loop() {
   detectDegree();
-  delay(100);
+  delay(500);
   //mySerialFunction(detectDegree());
   
   
@@ -107,7 +107,7 @@ void detectDegree() {
 
   previousDegree = smoothHeadingDegrees;
 
-  float writeDegrees = float(map(smoothHeadingDegrees, 0, 360, 0, 255));
+  int writeDegrees = int(map(smoothHeadingDegrees, 0, 360, 0, 255));
   Serial.println(writeDegrees); 
   mySerial.print(writeDegrees);
   mySerial.print('\n');
