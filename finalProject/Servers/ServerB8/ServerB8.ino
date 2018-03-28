@@ -18,7 +18,7 @@ void setup() {
   rf24.begin();
   rf24.setChannel(100);       // 設定頻道編號
   rf24.openWritingPipe(addr); // 設定通道位址
-  rf24.setPALevel(RF24_PA_LOW);   // 設定廣播功率
+  rf24.setPALevel(RF24_PA_MAX);   // 設定廣播功率
   rf24.setDataRate(RF24_250KBPS); // 設定傳輸速率
   rf24.stopListening();       // 停止偵聽；設定成發射模式
 
