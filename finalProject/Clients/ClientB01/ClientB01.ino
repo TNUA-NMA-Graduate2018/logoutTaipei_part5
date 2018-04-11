@@ -88,7 +88,7 @@ void controlByOther(int FromOtherL, int FromOtherR) {//0後退 1不動 2前進
     }
     if (fromOtherRFixed != fromOtherR || fromOtherLFixed != fromOtherL) {
       breath(fromOtherL, fromOtherR);
-      delay(300);
+      delay(200);
     }
   }
   fromOtherRFixed = fromOtherR;
@@ -139,8 +139,8 @@ void connectCheck() {
     }
     //偵測方向 2後退 1停止 0前進
     if (mode == 0) {
+      //countNoSignal = 0;
       if (mg[0] == 'R') {
-        countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';
       }
@@ -150,6 +150,9 @@ void connectCheck() {
         countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';
+      }
+      if (mg[0] == 'R') {
+        countNoSignal = 0;
       }
     }
   }

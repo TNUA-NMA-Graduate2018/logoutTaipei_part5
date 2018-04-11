@@ -149,6 +149,8 @@ void connectCheck() {
         countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';
+      }if (mg[0] == 'R') {
+        countNoSignal = 0;
       }
     }
   }
