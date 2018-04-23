@@ -113,12 +113,12 @@ void breath(int l, int r) {
   int i, j, a;
   for (i = 0; i < mid; i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(5 + l * 20, 30 - l * 7, 5 + l * 12 + j * 4));
+      strip.setPixelColor(i + j, strip.Color(30 - l * 7, 5 + l * 12 + j * 4 , 5 + l * 20 ));
     }
   }
   for (i = mid; i < strip.numPixels(); i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(5 + r * 20, 30 - r * 7, 5 + r * 12 + j * 4));
+      strip.setPixelColor(i + j, strip.Color(30 - l * 7, 5 + l * 12 + j * 4 , 5 + l * 20 ));
     }
   }
   strip.show();
@@ -150,7 +150,7 @@ void connectCheck() {
         countNoSignal = 0;
         fromOtherL = mg[1] - '0';
         fromOtherR = mg[2] - '0';
-      }if (mg[0] == 'R') {
+      } if (mg[0] == 'R') {
         countNoSignal = 0;
       }
     }
