@@ -112,12 +112,12 @@ void breath(int l, int r) {
   int i, j, a;
   for (i = 0; i < mid; i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(30 - l * 7, 5 + l * 12 + j * 4 , 5 + l * 20 ));
+      strip.setPixelColor(i + j, strip.Color(35-l*10 , 5 +j   , 28+ l * 27+3*j ));
     }
   }
   for (i = mid; i < strip.numPixels(); i += 10) {
     for (j = 0; j < 10; j++) {
-      strip.setPixelColor(i + j, strip.Color(30 - l * 7, 5 + l * 12 + j * 4 , 5 + l * 20 ));
+      strip.setPixelColor(i + j, strip.Color(35-r*15 , 5 + j  , 28 + r * 27+3*j ));
     }
   }
   strip.show();
