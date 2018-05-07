@@ -10,8 +10,8 @@ RF24 rf24(9, 10); // CE腳, CSN腳
 const byte addr[] = "BNode";
 byte pipe = 1;  // 指定通道編號
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(pixelNumber, 2, NEO_GRB + NEO_KHZ800);
-boolean mode = 1;
-boolean modeChange = 1; //0=遙控 1=互控
+boolean mode = 0;
+boolean modeChange = 0; //0=遙控 1=互控
 //const int modeChanging = 3;
 int countNoSignal = 0;
 
